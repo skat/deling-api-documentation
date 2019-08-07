@@ -12,8 +12,8 @@ externalDocs:
 servers:
 - url: http://identity-provider-deling-tst.ocpt.ccta.dk/
 x-servers:
-  - url: //example.com/api/
-	description: Default server
+  - url: https://del.skat.dk/
+  description: Default server
 tags:
 - name: platforms
   description: Handling sharing-economy platforms identities of the Deleøkonomi project
