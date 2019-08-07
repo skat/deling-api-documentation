@@ -12,7 +12,7 @@ externalDocs:
 servers:
 - url: http://identity-provider-deling-tst.ocpt.ccta.dk/
 x-servers:
-  - url: https://del.skat.dk/
+  - url: //del.skat.dk/
   description: Default server
 tags:
 - name: platforms
