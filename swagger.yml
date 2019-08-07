@@ -1,0 +1,491 @@
+openapi: 3.0.2
+info:
+  title: Filing Api
+  description: 'This is the filing api for projekt DEL (Deleøkonomi).'
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: ufst-deleokonomi@ufst.dk
+  version: 0.0.1
+externalDocs:
+  description: See the repo here
+  url: https://github.ccta.dk/TeamDelta/filing-api
+servers:
+  - url: http://identity-provider-deling-tst.ocpt.ccta.dk/
+tags:
+  - name: filings
+    description: Receiving filings from 3rd party platforms and displaying reported filings back to the platforms
+
+
+#components:
+#  parameters:
+#    platformId:
+paths:
+  # ------------- FilingController -------------
+  /platforms/{platformId}/{assetType}-filing/{filingReference}/save:
+    post:
+      tags:
+        - filings
+      parameters:
+        - $ref: '#/components/parameters/platformId'
+        - $ref: '#/components/parameters/assetType'
+        - $ref: '#/components/parameters/filingReference'
+      summary: Add a new platform to the identity provider
+      operationId: addPlatform
+      requestBody:
+        description: Platform object that needs to be added to the identity provider
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Filing'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Platform'
+        required: true
+      responses:
+        201:
+          description: "Created succesfully"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessfulFiling'
+        400:
+          description: Wrong sequenceNumber was supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FilingError'
+        404:
+          description: Pet not found
+          content: {}
+        405:
+          description: Validation exception
+          content: {}
+  #      security:
+  /platforms/{platformId}/{assetType}-filings/{filingReference}:
+    get:
+      tags:
+        - filings
+      summary: Shows the last version of a filing
+      description: Shows the last version of a filing denoted by the highest sequence number
+      operationId: showLatestFiling
+      parameters:
+        - $ref: '#/components/parameters/platformId'
+        - $ref: '#/components/parameters/assetType'
+        - $ref: '#/components/parameters/filingReference'
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FilingSpecificVersion'
+        404:
+          description: Not found
+  /platforms/{platformId}/{assetType}-filings/{filingReference}/versions:
+    get:
+      tags:
+        - filings
+      summary: Lists all versions of a filing with the given filing reference
+      description: Returns a list of all versions of a filing
+      operationId: showAllFilingVersions
+      parameters:
+        - $ref: '#/components/parameters/platformId'
+        - $ref: '#/components/parameters/assetType'
+        - $ref: '#/components/parameters/filingReference'
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FilingSpecificVersion'
+        404:
+          description: Not found
+  /platforms/{platformId}/{assetType}-filings/{filingReference}/versions/{sequenceNumber}:
+    get:
+      tags:
+        - filings
+      summary: Finds a specific version of a filing with the given sequence number
+      description: Returns a single filing
+      operationId: showSingleFilingVersion
+      parameters:
+        - $ref: '#/components/parameters/platformId'
+        - $ref: '#/components/parameters/assetType'
+        - $ref: '#/components/parameters/filingReference'
+        - $ref: '#/components/parameters/sequenceNumber'
+      responses:
+        200:
+          description: The filing was found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FilingSpecificVersion'
+        404:
+          description: Could not find the filing because minimum one of the 4 given parameters was unknown
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericNotFound'
+  # ------------- TokensController -------------
+  /tokens/validateToken:
+    post:
+      tags:
+        - tokens
+      requestBody:
+        content:
+          application/vnd.api+json:
+            schema:
+              type: object
+              required:
+                - token
+                - platformId
+              properties:
+                token:
+                  type: string
+                  example: "f42b7330-052a-433b-9047-61d1cd6f5fd5"
+                platformId:
+                  type: string
+                  example: "9dd16393-7f23-4b4e-802b-f988b039c7d6"
+      responses:
+        200:
+          description: OK
+          content:
+            application/vnd.api+json:
+              schema:
+                type: object
+                required:
+                  - valid
+                  - message
+                properties:
+                  valid:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Valid Token"
+        404:
+          description: Not found
+          content:
+            application/vnd.api+json:
+              schema:
+                type: object
+                required:
+                  - valid
+                  - message
+                properties:
+                  valid:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: "Token doesn't exist"
+  /tokens/getSocialSecurityFromToken/{id}:
+    get:
+      tags:
+        - tokens
+      summary: Calling get on a personal identity token returns the associated social security number
+      operationId: getSocialSecurityFromToken
+      parameters:
+        - name: id
+          in: path
+          description: The identity token that is being looked up
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/vnd.api+json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/socialSecurity'
+components:
+  parameters:
+    # ------------- Path Parameters -------------
+    platformId:
+      in: path
+      name: platformId
+      required: true
+      schema:
+        type: string
+      description: uuid of the platform that is sending the request
+    assetType:
+      in: path
+      name: assetType
+      schema:
+        type: string
+      required: true
+      description: The assets type, one of the three following values - accommodation, vehicle, boat
+    filingReference:
+      in: path
+      name: filingReference
+      schema:
+        type: string
+      required: true
+      description: The 3rd party platforms identifier for a platform
+    sequenceNumber:
+      in: path
+      name: sequenceNumber
+      schema:
+        type: integer
+      required: true
+      description: The incremental number of a filing where each increment denotes the last version
+  schemas:
+    # ------------- 2xx -------------
+    SuccessfulFiling:
+      required:
+        - data
+        - links
+      properties:
+        data:
+          type: object
+          required:
+            - id
+            - type
+            - attributes
+            - links
+        links:
+          type: object
+          required:
+            - self
+          properties:
+            self:
+              type: string
+              example: "/platforms/85232389-c876-40a4-9b67-f95eec44825d/accommodation-filings/123456"
+    # ------------- 4xx -------------
+    FilingError:
+      required:
+        - errors
+      type: object
+      properties:
+        error:
+          type: object
+          required:
+            - title
+            - source
+            - detail
+          properties:
+            title:
+              type: string
+              example: "Wrong sequenceNumber"
+            source:
+              type: object
+              required:
+                - pointer
+              properties:
+                pointer:
+                  type: string
+                  example: "#/data/attributes/sequenceNumber"
+            detail:
+              type: string
+              example: "The value for sequenceNumber was 1 in the payload, but 2 was expected"
+    # ------------- 5xx -------------
+
+    # ------------- Reusable entities -------------
+    Filing:
+      required:
+        - data
+      type: object
+      properties:
+        data:
+          type: object
+          required:
+            - type
+            - attributes
+          properties:
+            type:
+              type: string
+              example: "accomodation"
+            attributes:
+              type: object
+              required:
+                - sequenceNumber
+                - filingData
+              properties:
+                sequenceNumber:
+                  type: integer
+                  example: 0
+                filingData:
+                  type: object
+                  required:
+                    - personIdToken
+                    - amount
+                    - currency
+                    - startTimestamp
+                    - endTimestamp
+                    - paymentTimestamp
+                    - asset
+                  properties:
+                    personIdToken:
+                      type: string
+                      example: "46970070-0aa2-4d4c-bad9-aa18a248d5cb"
+                    amount:
+                      type: integer
+                      example: 795.51
+                    currency:
+                      type: string
+                      example: "DKK"
+                    startTimestamp:
+                      type: string
+                      format: date-time
+                    endTimestamp:
+                      type: string
+                      format: date-time
+                    paymentTimestamp:
+                      type: string
+                      format: date-time
+                    asset:
+                      type: object
+                      properties:
+                        assetUniqueId:
+                          type: string
+                          example: ""
+                        assetCountryCode:
+                          type: string
+                          example: "DK"
+                        level1:
+                          type: string
+                          example: ""
+                        level2:
+                          type: string
+                          example: ""
+                        level3:
+                          type: string
+                          example: ""
+                        level4:
+                          type: string
+                          example: ""
+                        unstructuredAddress:
+                          type: object
+                          properties:
+                            countryCode:
+                              type: string
+                              example: ""
+                            addressLine1:
+                              type: string
+                              example: ""
+                            addressLine2:
+                              type: string
+                              example: ""
+                            addressLine3:
+                              type: string
+                              example: ""
+                            addressLine4:
+                              type: string
+                              example: ""
+    FilingSpecificVersion:
+      type: object
+      required:
+        - name
+        - redirectUrl
+        - mailDomain
+        - contactMail
+        - base64Logo
+        - certificate
+      properties:
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+              example: "my-filing-reference"
+            type:
+              type: string
+              example: "accomodation-filing"
+            attributes:
+              type: object
+              properties:
+                filingReference:
+                  type: string
+                  example: "my-filing-reference"
+                sequenceNumber:
+                  type: integer
+                  example: 2
+                platformId:
+                  type: string
+                  example: "my-platform-id"
+                filingData:
+                  type: object
+                  properties:
+                    amount:
+                      type: number
+                      example: 1234.95
+                    currency:
+                      type: string
+                      example: "DKK"
+                    startTimestamp:
+                      type: string
+                      example: '2019-03-12T12:41:10.218Z'
+                    endTimestamp:
+                      type: string
+                      example: '2019-03-12T12:41:10.218Z'
+                    paymentTimestamp:
+                      type: string
+                      example: '2019-03-12T12:41:10.218Z'
+            links:
+              type: object
+              properties:
+                self:
+                  type: string
+                  example: "/platforms/85232389-c876-40a4-9b67-f95eec44825d/accommodation-filings/0/versions/2"
+        links:
+          type: object
+          properties:
+            self:
+              type: string
+              example: "/platforms/85232389-c876-40a4-9b67-f95eec44825d/accommodation-filings/0/versions/2"
+
+    GenericNotFound:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Not Found"
+        error:
+          type: integer
+          example: 404
+
+    Platform:
+      required:
+        - name
+        - redirectUrl
+        - mailDomain
+        - contactMail
+        - base64Logo
+        - certificate
+      type: object
+      properties:
+        platformId:
+          type: string
+          example: "9dd16393-7f23-4b4e-802b-f988b039c7d6"
+        name:
+          type: string
+          example: "GodtPlatformNavn"
+        mailDomain:
+          type: string
+          example: "@something.dk"
+        contactMail:
+          type: string
+          example: "something@something.dk"
+        base64Logo:
+          type: string
+        certificate:
+          type: string
+    socialSecurity:
+      required:
+        - socialSecurityNumber
+      type: object
+      properties:
+        socialSecurityNumber:
+          type: string
+          example: "123456780"
+#  securitySchemes:
+#    api_key:
+#      type: apiKey
+#      in: header
+#      name: X-API-KEY
