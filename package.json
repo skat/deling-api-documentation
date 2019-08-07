@@ -1,0 +1,29 @@
+{
+  "data": {
+    "type": "vehicle-filing",
+    "attributes": {
+      "filingReference": "${filingReference}",
+      "sequenceNumber": 0,
+      "platformId ": "${platformId}",
+      "filingData": {
+        "personIdToken": "12345-123123-123123",
+        "amount": 1234,
+        "currency": "DKK",
+        "startTimestamp": "2019-03-12T12:41:10Z",
+        "endTimestamp": "2019-03-12T12:41:10Z",
+        "paymentTimestamp": "2019-03-12T12:41:10Z",
+        "asset": {
+          "assetUniqueId": "",
+          "assetCountryCode": "DK",
+          "level1": "vehicle",
+          "level2": "",
+          "level3": "",
+          "level4": ""
+        }
+      }
+    }
+  },
+  "dependencies": {
+    "redoc": "^2.0.0-rc.12"
+  }
+}
