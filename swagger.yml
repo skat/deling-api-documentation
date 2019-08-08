@@ -452,6 +452,10 @@ components:
         self:
           type: string
           example: "/platforms/85232389-c876-40a4-9b67-f95eec44825d/accommodation-filings"
+    Id:
+      type: integer
+      format: int64
+      readOnly: true
     Order:
       type: object
       properties:
