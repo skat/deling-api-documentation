@@ -1,13 +1,23 @@
 openapi: 3.0.2
 servers:
-  - url: http://identity-provider-deling-tst.ocpt.ccta.dk/
+  - url: http://del.skat.dk/
 x-servers:
-  - url: http://identity-provider-deling-tst.ocpt.ccta.dk/
+  - url: http://del.skat.dk/
 info:
   description: |
    
     # Introduction
     This is the API for receiving filings concerning citizens taxable transactions, from sharing economy platforms, for project DEL (Deleøkonomi).
+    This REST API is built, in order for platforms to send in relevant income data to Skatteforvaltningen on their users and their rentals.
+
+    The API is organized around REST, using JSON as the payload format. Our API has resource-oriented URLs and uses HTTP response codes to indicate API errors. JSON is returned by all API responses, including errors.
+
+    The API allows manipulation of three types of resources:
+      - vehicle filings
+      - boat filings
+      - accommodation filings
+      
+    A filing resource is uniquely identified by a platformId and a filingReference. In case multiple versions of the resource have been created these can be distinguished by a sequence number which is part of the payload. The sequence number starts at zero and increments by one for every new version of the filing.
 
     # Authentication
     Put authentication information here.
