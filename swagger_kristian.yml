@@ -159,31 +159,27 @@ components:
       in: path
       name: platformId
       required: true
-      schema:
-        type: string
+      type: string
       description: uuid of the platform that is sending the request
       example: "b410b282-168e-4ebe-805a-e73df079769d"
     assetType:
       in: path
       name: assetType
-      schema:
-        type: string
+      type: string
       required: true
       description: The assets type, one of the three following values - accommodation, vehicle, boat
       example: "accommodation"
     filingReference:
       in: path
       name: filingReference
-      schema:
-        type: string
+      type: string
       required: true
       description: The 3rd party platforms identifier for a platform
       example: "2a0f1f82-8ebf-418f-bbd8-b018f33a6971"
     sequenceNumber:
       in: path
       name: sequenceNumber
-      schema:
-        type: string
+      type: string
       required: true
       description: The 3rd party platforms identifier for a platform
       example: "0"
