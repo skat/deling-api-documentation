@@ -322,13 +322,9 @@ components:
             - type
             - attributes
           properties:
-            type:
-              type: string
-              discriminator:
-                  propertyName: type
-                  mapping:
-                    accomodation-filing: '#/components/schemas/AccomodationFiling'
-                    vehicle-filing: '#/components/schemas/VehicleFiling'  
+              type:
+                type: string
+                default: "accommodation-filing"
             attributes:
               type: object
               required:
