@@ -44,7 +44,7 @@ paths:
       summary: Add or update a filing regarding a danish taxpayers sharing economy transactions through a sharing economy platform
       operationId: addFiling
       requestBody:
-        $ref: '#/components/requestBodies/Filing
+        $ref: '#/components/requestBodies/Filing'
       responses:
         201:
           description: A correct filing was submitted
@@ -294,8 +294,7 @@ components:
         propertyName: type
         mapping:
           accomodation-filing: '#/components/schemas/AccomodationFiling'
-          vehicle-filing: '#/components/schemas/Filing'
-          boat-filing: '#/components/schemas/Filing'
+          vehicle-filing: '#/components/schemas/VehicleFiling'
       properties:
         data:
           type: object
