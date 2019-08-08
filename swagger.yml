@@ -42,7 +42,6 @@ info:
 
   version: 1.0.0
   title: Filing API
-  description: 'This is the API for receiving filings concerning citizens taxable transactions, from sharing economy platforms, for project DEL (Deleøkonomi)"
   termsOfService: 'http://swagger.io/terms/'
   contact:
     name: API Support
