@@ -1,16 +1,10 @@
 openapi: 3.0.2
 info:
   title: Filing Api
-  description: 'This is the filing api for projekt DEL (Deleøkonomi).'
+  description: |
   
     # Introduction
-    This API is documented in **OpenAPI format** and is based on
-    [Petstore sample](http://petstore.swagger.io/) provided by [swagger.io](http://swagger.io) team.
-    It was **extended** to illustrate features of [generator-openapi-repo](https://github.com/Rebilly/generator-openapi-repo)
-    tool and [ReDoc](https://github.com/Redocly/redoc) documentation. In addition to standard
-    OpenAPI syntax we use a few [vendor extensions](https://github.com/Redocly/redoc/blob/master/docs/redoc-vendor-extensions.md).
-
-    # OpenAPI Specification
+    This is the filing api for projekt DEL (Deleøkonomi).
     This API is documented in **OpenAPI format** and is based on
     [Petstore sample](http://petstore.swagger.io/) provided by [swagger.io](http://swagger.io) team.
     It was **extended** to illustrate features of [generator-openapi-repo](https://github.com/Rebilly/generator-openapi-repo)
@@ -20,12 +14,14 @@ info:
   termsOfService: http://swagger.io/terms/
   contact:
     email: ufst-deleokonomi@ufst.dk
-  version: 0.0.1
+  version: 1.0.0
 externalDocs:
   description: See the repo here
   url: https://github.ccta.dk/TeamDelta/filing-api
 servers:
-  - url: http://identity-provider-deling-tst.ocpt.ccta.dk/
+  - url: http://skat-host.dk/
+x-servers:
+  - url: http://skat-host.dk/
 x-logo:
     url: 'https://redocly.github.io/redoc/petstore-logo.png'
     altText: Petstore logo
@@ -39,7 +35,7 @@ tags:
 #    platformId:
 paths:
   # ------------- FilingController -------------
-  /platforms/{platformId}/{assetType}-filing/{filingReference}/save:
+  /platforms/{platformId}/{assetType}-filing/{filingReference}:
     post:
       tags:
         - filings
@@ -145,84 +141,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GenericNotFound'
-  # ------------- TokensController -------------
-  /tokens/validateToken:
-    post:
-      tags:
-        - tokens
-      requestBody:
-        content:
-          application/vnd.api+json:
-            schema:
-              type: object
-              required:
-                - token
-                - platformId
-              properties:
-                token:
-                  type: string
-                  example: "f42b7330-052a-433b-9047-61d1cd6f5fd5"
-                platformId:
-                  type: string
-                  example: "9dd16393-7f23-4b4e-802b-f988b039c7d6"
-      responses:
-        200:
-          description: OK
-          content:
-            application/vnd.api+json:
-              schema:
-                type: object
-                required:
-                  - valid
-                  - message
-                properties:
-                  valid:
-                    type: boolean
-                    example: true
-                  message:
-                    type: string
-                    example: "Valid Token"
-        404:
-          description: Not found
-          content:
-            application/vnd.api+json:
-              schema:
-                type: object
-                required:
-                  - valid
-                  - message
-                properties:
-                  valid:
-                    type: boolean
-                    example: false
-                  message:
-                    type: string
-                    example: "Token doesn't exist"
-  /tokens/getSocialSecurityFromToken/{id}:
-    get:
-      tags:
-        - tokens
-      summary: Calling get on a personal identity token returns the associated social security number
-      operationId: getSocialSecurityFromToken
-      parameters:
-        - name: id
-          in: path
-          description: The identity token that is being looked up
-          required: true
-          schema:
-            type: string
-      responses:
-        200:
-          description: OK
-          content:
-            application/vnd.api+json:
-              schema:
-                type: object
-                required:
-                  - data
-                properties:
-                  data:
-                    $ref: '#/components/schemas/socialSecurity'
 components:
   parameters:
     # ------------- Path Parameters -------------
