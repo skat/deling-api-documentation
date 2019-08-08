@@ -264,6 +264,12 @@ components:
       required:
         - data
       type: object
+      discriminator:
+        propertyName: petType
+        mapping:
+          accomodation-filing: '#/components/schemas/Filing'
+          vehicle-filing: '#/components/schemas/Filing'
+          boat-filing: '#/components/schemas/Filing'
       properties:
         data:
           type: object
@@ -272,6 +278,10 @@ components:
             - attributes
           properties:
             type:
+              enum:
+                - accomodation-filing
+                - vehicle-filing
+                - boat-filing
               type: string
               example: "accomodation-filing"
             attributes:
