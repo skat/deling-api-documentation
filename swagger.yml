@@ -264,6 +264,12 @@ components:
       required:
         - data
       type: object
+      discriminator:
+        propertyName: petType
+        mapping:
+          cat: '#/components/schemas/UnstructuredAddress'
+          dog: '#/components/schemas/UnstructuredAddress'
+          bee: '#/components/schemas/UnstructuredAddress'
       properties:
         data:
           type: object
