@@ -1,9 +1,8 @@
 openapi: 3.0.2
 servers:
-  - url: //petstore.swagger.io/v2
-    description: Default server
-  - url: //petstore.swagger.io/sandbox
-    description: Sandbox server
+  - url: http://identity-provider-deling-tst.ocpt.ccta.dk/
+x-servers:
+  - url: http://identity-provider-deling-tst.ocpt.ccta.dk/
 info:
   description: |
    
