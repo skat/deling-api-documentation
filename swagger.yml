@@ -268,15 +268,18 @@ components:
                 type:
                   type: string
                   default: "accommodation-filing"
-                filingData:
+                attributes:
                   type: object
                   properties:
-                    asset:
+                    filingData:
                       type: object
                       properties:
-                        test:
-                          type: string
-                          default: "hejsa"
+                        asset:
+                          type: object
+                          properties:
+                            test:
+                              type: string
+                              default: "hejsa"
                         
     
     VehicleFiling:
@@ -291,6 +294,18 @@ components:
                 type:
                   type: string
                   default: "vehicle-filing"
+                attributes:
+                  type: object
+                  properties:
+                    filingData:
+                      type: object
+                      properties:
+                        asset:
+                          type: object
+                          properties:
+                            test:
+                              type: string
+                              default: "hejsa"
     
     Filing:
       required:
