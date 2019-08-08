@@ -46,11 +46,11 @@ info:
   contact:
     name: API Support
     email: apiteam@swagger.io
-    url: ''
+    url: test@test.dk
   x-logo:
     url: 'https://eu.eu-supply.com/img/brandings/skatteministeriet.JPG'
     altText: Skatteministeriet Logo
-    href: google.com
+    href: ''
   license:
     name: Apache 2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
