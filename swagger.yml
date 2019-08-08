@@ -93,6 +93,7 @@ paths:
       operationId: showAllFilingVersions
       parameters:
         - $ref: '#/components/parameters/platformId'
+          type: string
         - $ref: '#/components/parameters/assetType'
         - $ref: '#/components/parameters/filingReference'
       responses:
