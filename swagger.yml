@@ -182,6 +182,10 @@ components:
       in: path
       name: assetType
       type: string
+      enum:
+        - accommodation
+        - vehicle
+        - boat
       required: true
       description: The assets type, one of the three following values - accommodation, vehicle, boat
       example: "accommodation"
