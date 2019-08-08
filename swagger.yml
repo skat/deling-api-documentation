@@ -44,7 +44,12 @@ paths:
       summary: Add or update a filing regarding a danish taxpayers sharing economy transactions through a sharing economy platform
       operationId: addFiling
       requestBody:
-        $ref: '#/components/requestBodies/Filing'
+        description: Data representing a danish taxpayers transactions through a sharing economy platform
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Filing'
+        required: true
       responses:
         201:
           description: A correct filing was submitted
@@ -162,7 +167,7 @@ paths:
                       $ref: '#/components/schemas/ShortFiling'
                   links:
                     $ref: '#/components/schemas/UnversionedLink'
-      
+
 components:
   # ------------- Path Parameters -------------
   parameters:
@@ -177,10 +182,6 @@ components:
       in: path
       name: assetType
       type: string
-      enum:
-        - accommodation
-        - vehicle
-        - boat
       required: true
       description: The assets type, one of the three following values - accommodation, vehicle, boat
       example: "accommodation"
@@ -324,24 +325,68 @@ components:
                         level4:
                           type: string
                           example: ""
-                        unstructuredAddress:
-                          type: object
-                          properties:
-                            countryCode:
-                              type: string
-                              example: ""
-                            addressLine1:
-                              type: string
-                              example: ""
-                            addressLine2:
-                              type: string
-                              example: ""
-                            addressLine3:
-                              type: string
-                              example: ""
-                            addressLine4:
-                              type: string
-                              example: ""
+                        oneOf:
+                          - $ref: '#/components/schemas/unstructuredAddress'
+                          - $ref: '#/components/schemas/structuredAddress'
+
+    unstructuredAddress:
+      type: object
+      required:
+        - countryCode
+        - addressLine1
+        - addressLine2
+        - addressLine3
+        - addressLine4
+      properties:
+        countryCode:
+          type: string
+          example: ""
+        addressLine1:
+          type: string
+          example: ""
+        addressLine2:
+          type: string
+          example: ""
+        addressLine3:
+          type: string
+          example: ""
+        addressLine4:
+          type: string
+          example: ""
+
+    structuredAddress:
+      type: object
+      required:
+        - countryCode
+        - street
+        - buildingIdentifier
+        - floorIdentifier
+        - doorId
+        - postCode
+        - city
+      properties:
+        countryCode:
+          type: string
+          example: "DK"
+        street:
+          type: string
+          example: "DK"
+        buildingIdentifier:
+          type: string
+          example: "DK"
+        floorIdentifier:
+          type: string
+          example: "DK"
+        doorId:
+          type: string
+          example: "DK"
+        postCode:
+          type: string
+          example: "DK"
+        city:
+          type: string
+          example: "DK"
+
     ShortFiling:
       type: object
       properties:
@@ -411,59 +456,6 @@ components:
         self:
           type: string
           example: "/platforms/85232389-c876-40a4-9b67-f95eec44825d/accommodation-filings"
-    Id:
-      type: integer
-      format: int64
-      readOnly: true
-    Order:
-      type: object
-      properties:
-        id:
-          description: Order ID
-          allOf:
-            - $ref: '#/components/schemas/Id'
-        petId:
-          description: Pet ID
-          allOf:
-            - $ref: '#/components/schemas/Id'
-        quantity:
-          type: integer
-          format: int32
-          minimum: 1
-          default: 1
-        shipDate:
-          description: Estimated ship date
-          type: string
-          format: date-time
-        status:
-          type: string
-          description: Order Status
-          enum:
-            - placed
-            - approved
-            - delivered
-        complete:
-          description: Indicates whenever order was completed or not
-          type: boolean
-          default: false
-          readOnly: true
-        rqeuestId:
-          description: Unique Request Id
-          type: string
-          writeOnly: true
-      xml:
-        name: Order
-  requestBodies:
-    Filing:
-      content:
-        application/json:
-          schema:
-            allOf:
-              - description: My Pet
-                title: Pettie
-              - $ref: '#/components/schemas/Filing'
-      description: Pet object that needs to be added to the store
-      required: true
 #  securitySchemes:
 #    api_key:
 #      type: apiKey
