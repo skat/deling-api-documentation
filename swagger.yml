@@ -277,9 +277,11 @@ components:
                         asset:
                           type: object
                           properties:
-                            test:
-                              type: string
-                              default: "hejsa"
+                            address: 
+                              oneOf:
+                                - $ref: '#/components/schemas/structuredAddress'
+                                - $ref: '#/components/schemas/unstructuredAddress'
+                                
                         
     
     VehicleFiling:
@@ -294,28 +296,29 @@ components:
                 type:
                   type: string
                   default: "vehicle-filing"
-                attributes:
-                  type: object
-                  properties:
-                    filingData:
-                      type: object
-                      properties:
-                        asset:
-                          type: object
-                          properties:
-                            test:
-                              type: string
-                              default: "hejsa"
+    
+    BoatFiling:
+      description: A boat filing
+      allOf:
+        - $ref: '#/components/schemas/Filing'
+        - type: object
+          properties:
+            data: 
+              type: object
+              properties:
+                type:
+                  type: string
+                  default: "boat-filing"
     
     Filing:
       required:
         - data
       type: object
-      discriminator:
-        propertyName: type
-        mapping:
-          accomodation-filing: '#/components/schemas/AccomodationFiling'
-          vehicle-filing: '#/components/schemas/VehicleFiling'
+      #discriminator:
+      #  propertyName: type
+      #  mapping:
+      #    accomodation-filing: '#/components/schemas/AccomodationFiling'
+      #    vehicle-filing: '#/components/schemas/VehicleFiling'
       properties:
         data:
           type: object
@@ -389,10 +392,6 @@ components:
                         level4:
                           type: string
                           example: ""
-                        address: 
-                          oneOf:
-                            - $ref: '#/components/schemas/unstructuredAddress'
-                            - $ref: '#/components/schemas/structuredAddress'
 
     unstructuredAddress:
       type: object
@@ -435,22 +434,22 @@ components:
           example: "DK"
         street:
           type: string
-          example: "DK"
+          example: "Gadenavn"
         buildingIdentifier:
           type: string
-          example: "DK"
+          example: "42A"
         floorIdentifier:
           type: string
-          example: "DK"
+          example: "3"
         doorId:
           type: string
-          example: "DK"
+          example: "th"
         postCode:
-          type: string
+          type: integer
           example: "DK"
         city:
           type: string
-          example: "DK"
+          example: "København N"
 
     ShortFiling:
       type: object
