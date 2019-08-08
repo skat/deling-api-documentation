@@ -170,7 +170,38 @@ paths:
                       $ref: '#/components/schemas/ShortFiling'
                   links:
                     $ref: '#/components/schemas/UnversionedLink'
-
+  /store/order:
+    post:
+      tags:
+        - store
+      summary: Place an order for a pet
+      description: ''
+      operationId: placeOrder
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '400':
+          description: Invalid Order
+          content:
+            application/json:
+              example:
+                status: 400
+                message: "Invalid Order"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+        description: order placed for purchasing the pet
+        required: true
+        
 components:
   # ------------- Path Parameters -------------
   parameters:
@@ -421,6 +452,44 @@ components:
         self:
           type: string
           example: "/platforms/85232389-c876-40a4-9b67-f95eec44825d/accommodation-filings"
+    Order:
+      type: object
+      properties:
+        id:
+          description: Order ID
+          allOf:
+            - $ref: '#/components/schemas/Id'
+        petId:
+          description: Pet ID
+          allOf:
+            - $ref: '#/components/schemas/Id'
+        quantity:
+          type: integer
+          format: int32
+          minimum: 1
+          default: 1
+        shipDate:
+          description: Estimated ship date
+          type: string
+          format: date-time
+        status:
+          type: string
+          description: Order Status
+          enum:
+            - placed
+            - approved
+            - delivered
+        complete:
+          description: Indicates whenever order was completed or not
+          type: boolean
+          default: false
+          readOnly: true
+        rqeuestId:
+          description: Unique Request Id
+          type: string
+          writeOnly: true
+      xml:
+        name: Order
 #  securitySchemes:
 #    api_key:
 #      type: apiKey
