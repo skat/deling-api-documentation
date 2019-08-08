@@ -264,12 +264,6 @@ components:
       required:
         - data
       type: object
-      discriminator:
-        propertyName: petType
-        mapping:
-          cat: '#/components/schemas/Filing'
-          dog: '#/components/schemas/Filing'
-          bee: '#/components/schemas/Filing'
       properties:
         data:
           type: object
@@ -339,9 +333,10 @@ components:
                         level4:
                           type: string
                           example: ""
-                        oneOf:
-                          - $ref: '#/components/schemas/unstructuredAddress'
-                          - $ref: '#/components/schemas/structuredAddress'
+                        address: 
+                          oneOf:
+                            - $ref: '#/components/schemas/unstructuredAddress'
+                            - $ref: '#/components/schemas/structuredAddress'
 
     unstructuredAddress:
       type: object
