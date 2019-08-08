@@ -44,12 +44,7 @@ paths:
       summary: Add or update a filing regarding a danish taxpayers sharing economy transactions through a sharing economy platform
       operationId: addFiling
       requestBody:
-        description: Data representing a danish taxpayers transactions through a sharing economy platform
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Filing'
-        required: true
+        $ref: '#/components/requestBodies/Filing
       responses:
         201:
           description: A correct filing was submitted
@@ -260,6 +255,37 @@ components:
     # ------------- 5xx -------------
 
     # ------------- Reusable entities -------------
+    
+    AccomodationFiling:
+      description: An accommodation filing
+      allOf:
+        - $ref: '#/components/schemas/Filing'
+        - type: object
+          properties:
+            packSize:
+              type: integer
+              format: int32
+              description: The size of the pack the dog is from
+              default: 1
+              minimum: 1
+          required:
+            - packSize
+    
+    VehicleFiling:
+      description: A vehicle filing
+      allOf:
+        - $ref: '#/components/schemas/Filing'
+        - type: object
+          properties:
+            packSize2:
+              type: integer
+              format: int32
+              description: The size of the pack the dog is from
+              default: 1
+              minimum: 1
+          required:
+            - packSize2
+    
     Filing:
       required:
         - data
@@ -267,7 +293,7 @@ components:
       discriminator:
         propertyName: type
         mapping:
-          accomodation-filing: '#/components/schemas/Filing'
+          accomodation-filing: '#/components/schemas/AccomodationFiling'
           vehicle-filing: '#/components/schemas/Filing'
           boat-filing: '#/components/schemas/Filing'
       properties:
@@ -278,10 +304,6 @@ components:
             - attributes
           properties:
             type:
-              enum:
-                - accomodation-filing
-                - vehicle-filing
-                - boat-filing
               type: string
               example: "accomodation-filing"
             attributes:
@@ -475,6 +497,18 @@ components:
         self:
           type: string
           example: "/platforms/85232389-c876-40a4-9b67-f95eec44825d/accommodation-filings"
+          
+  requestBodies:
+    Filing:
+      content:
+        application/json:
+          schema:
+            allOf:
+              - description: My Pet
+                title: Pettie
+              - $ref: '#/components/schemas/Filing'
+      description: Pet object that needs to be added to the store
+      required: true
 #  securitySchemes:
 #    api_key:
 #      type: apiKey
