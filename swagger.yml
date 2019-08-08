@@ -11,6 +11,9 @@ externalDocs:
   url: https://github.ccta.dk/TeamDelta/filing-api
 servers:
   - url: http://identity-provider-deling-tst.ocpt.ccta.dk/
+x-logo:
+    url: 'https://redocly.github.io/redoc/petstore-logo.png'
+    altText: Petstore logo
 tags:
   - name: filings
     description: Receiving filings from 3rd party platforms and displaying reported filings back to the platforms
