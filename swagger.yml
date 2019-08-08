@@ -18,7 +18,7 @@ info:
   contact:
     email: ufst-deleokonomi@ufst.dk
   x-logo:
-    url: 'https://github.com/skat/deling-api-documentation/blob/master/skatteministeret_logo.png'
+    url: 'https://github.com/skat/deling-api-documentation/blob/master/skatteministeret_logo.png?raw=true'
     altText: Skatteministeriet Logo
     href: ''
   license:
@@ -177,6 +177,10 @@ components:
       in: path
       name: assetType
       type: string
+      enum:
+        - accommodation
+        - vehicle
+        - boat
       required: true
       description: The assets type, one of the three following values - accommodation, vehicle, boat
       example: "accommodation"
