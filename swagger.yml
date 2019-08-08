@@ -39,8 +39,11 @@ paths:
         - filings
       parameters:
         - $ref: '#/components/parameters/platformId'
+          type: string
         - $ref: '#/components/parameters/assetType'
+          type: string
         - $ref: '#/components/parameters/filingReference'
+          type: string
       summary: Add or update a filing regarding a danish taxpayers sharing economy transactions through a sharing economy platform
       operationId: addFiling
       requestBody:
