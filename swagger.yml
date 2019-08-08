@@ -46,7 +46,7 @@ info:
   contact:
     name: API Support
     email: apiteam@swagger.io
-    url: google.com
+    url: ''
   x-logo:
     url: 'https://eu.eu-supply.com/img/brandings/skatteministeriet.JPG'
     altText: Skatteministeriet Logo
