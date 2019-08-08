@@ -322,19 +322,13 @@ components:
             - type
             - attributes
           properties:
-            type: 
+            type:
+              type: string
               discriminator:
-                propertyName: type
-                mapping:
-                  accomodation-filing: '#/components/schemas/AccomodationFiling'
-                  vehicle-filing: '#/components/schemas/VehicleFiling'
-            #type:
-             # type: string
-            #  enum:
-             #   - accomodation-filing
-              #  - vehicle-filing
-               # - boat-filing
-              #example: "accomodation-filing"
+                  propertyName: type
+                  mapping:
+                    accomodation-filing: '#/components/schemas/AccomodationFiling'
+                    vehicle-filing: '#/components/schemas/VehicleFiling'  
             attributes:
               type: object
               required:
