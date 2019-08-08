@@ -181,8 +181,8 @@ components:
     assetType:
       in: path
       name: assetType
-      type: string
       schema:
+        type: string
         enum:
           - accommodation
           - vehicle
