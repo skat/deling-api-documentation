@@ -314,6 +314,12 @@ components:
       required:
         - data
       type: object
+      discriminator:
+        propertyName: type
+        mapping:
+          accommodation-filing: '#/components/schemas/AccommodationFiling'
+          vehicle-filing: '#/components/schemas/VehicleFiling'
+          boat-filing: '#/components/schemas/BoatFiling'
       properties:
         data:
           type: object
