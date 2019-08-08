@@ -260,6 +260,8 @@ components:
       required:
         - data
       type: object
+      example: 
+        type: "accodomation-filing"
       properties:
         data:
           type: object
