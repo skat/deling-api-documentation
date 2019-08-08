@@ -262,14 +262,12 @@ components:
         - $ref: '#/components/schemas/Filing'
         - type: object
           properties:
-            packSize:
-              type: integer
-              format: int32
-              description: The size of the pack the dog is from
-              default: 1
-              minimum: 1
-          required:
-            - packSize
+            data: 
+              type: object
+              properties:
+                type:
+                  type: string
+                  default: "accommodation-filing"
     
     VehicleFiling:
       description: A vehicle filing
@@ -277,14 +275,12 @@ components:
         - $ref: '#/components/schemas/Filing'
         - type: object
           properties:
-            packSize2:
-              type: integer
-              format: int32
-              description: The size of the pack the dog is from
-              default: 1
-              minimum: 1
-          required:
-            - packSize2
+            data: 
+              type: object
+              properties:
+                type:
+                  type: string
+                  default: "vehicle-filing"
     
     Filing:
       required:
