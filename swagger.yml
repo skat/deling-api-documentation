@@ -283,7 +283,7 @@ components:
               properties:
                 pointer:
                   type: string
-                  example: "#/data/attributes/sequenceNumber"
+                  example: '#/data/attributes/sequenceNumber'
             detail:
               type: string
               example: "The value for sequenceNumber was 1 in the payload, but 2 was expected"
