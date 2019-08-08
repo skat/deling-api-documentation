@@ -314,11 +314,7 @@ components:
       required:
         - data
       type: object
-      #discriminator:
-      #  propertyName: type
-      #  mapping:
-      #    accomodation-filing: '#/components/schemas/AccomodationFiling'
-      #    vehicle-filing: '#/components/schemas/VehicleFiling'
+      
       properties:
         data:
           type: object
@@ -326,13 +322,19 @@ components:
             - type
             - attributes
           properties:
-            type:
-              type: string
-              enum:
-                - accomodation-filing
-                - vehicle-filing
-                - boat-filing
-              example: "accomodation-filing"
+            type: 
+              discriminator:
+                propertyName: type
+                mapping:
+                  accomodation-filing: '#/components/schemas/AccomodationFiling'
+                  vehicle-filing: '#/components/schemas/VehicleFiling'
+            #type:
+             # type: string
+            #  enum:
+             #   - accomodation-filing
+              #  - vehicle-filing
+               # - boat-filing
+              #example: "accomodation-filing"
             attributes:
               type: object
               required:
