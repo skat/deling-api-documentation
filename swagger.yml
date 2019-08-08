@@ -39,23 +39,12 @@ paths:
         - filings
       parameters:
         - $ref: '#/components/parameters/platformId'
-          type: string
         - $ref: '#/components/parameters/assetType'
-          type: string
         - $ref: '#/components/parameters/filingReference'
-          type: string
       summary: Add or update a filing regarding a danish taxpayers sharing economy transactions through a sharing economy platform
       operationId: addFiling
       requestBody:
-        description: Data representing a danish taxpayers transactions through a sharing economy platform
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Filing'
-        required: true
-      x-code-samples:
-          $ref: '#/components/schemas/SuccessfulFiling' 
-            
+        $ref: '#/components/requestBodies/Filing'
       responses:
         201:
           description: A correct filing was submitted
@@ -297,8 +286,6 @@ components:
       required:
         - data
       type: object
-      example: 
-        type: "accodomation-filing"
       properties:
         data:
           type: object
@@ -497,6 +484,17 @@ components:
           writeOnly: true
       xml:
         name: Order
+  requestBodies:
+    Filing:
+      content:
+        application/json:
+          schema:
+            allOf:
+              - description: My Pet
+                title: Pettie
+              - $ref: '#/components/schemas/Filing'
+      description: Pet object that needs to be added to the store
+      required: true
 #  securitySchemes:
 #    api_key:
 #      type: apiKey
