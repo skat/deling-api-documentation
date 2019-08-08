@@ -21,6 +21,7 @@ info:
     url: 'https://eu.eu-supply.com/img/brandings/skatteministeriet.JPG'
     altText: Skatteministeriet Logo
     href: ''
+    margin: 5
   license:
     name: Apache 2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
