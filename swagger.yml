@@ -314,18 +314,18 @@ components:
       required:
         - data
       type: object
-      discriminator:
-        propertyName: type
       properties:
         data:
           type: object
+          discriminator:
+            propertyName: type
           required:
             - type
             - attributes
           properties:
-              type:
-                type: string
-                example: "accommodation-filing"
+              #type:
+               # type: string
+                #example: "accommodation-filing"
               attributes:
                 type: object
                 required:
