@@ -267,9 +267,9 @@ components:
       discriminator:
         propertyName: petType
         mapping:
-          cat: '#/components/schemas/UnstructuredAddress'
-          dog: '#/components/schemas/UnstructuredAddress'
-          bee: '#/components/schemas/UnstructuredAddress'
+          cat: '#/components/schemas/Filing'
+          dog: '#/components/schemas/Filing'
+          bee: '#/components/schemas/Filing'
       properties:
         data:
           type: object
