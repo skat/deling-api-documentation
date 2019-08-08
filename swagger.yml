@@ -106,6 +106,7 @@ paths:
         - $ref: '#/components/parameters/platformId'
         - $ref: '#/components/parameters/assetType'
       summary: List all filings from a platform of a specific assetType
+      details: Details go here
       operationId: listFilings
       responses:
         200:
