@@ -201,8 +201,7 @@ components:
       in: path
       name: platformId
       required: true
-      schema:
-        type: string
+      type: string
       description: uuid of the platform that is sending the request
       example: "b410b282-168e-4ebe-805a-e73df079769d"
     assetType:
