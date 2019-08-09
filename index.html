@@ -21,8 +21,10 @@
   <body>
     <redoc spec-url='https://raw.githubusercontent.com/skat/deling-api-documentation/master/swagger.yml'></redoc>
     <script src="https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.js"> </script>
+
+    <!-- Used for auto-expanding all samples at beginning -->
     <script>
-        setTimeout(function() {
+          setTimeout(function() {
           var els = document.querySelectorAll('.collapsible .collapsed');
           for(el of els) {
             el.classList.remove('collapsed');
