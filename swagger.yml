@@ -38,20 +38,24 @@ externalDocs:
   description: See the repo here
   url: https://github.ccta.dk/TeamDelta/filing-api
 tags:
-  - name: filings
-    description: Receiving filings from 3rd party platforms and displaying reported filings back to the platforms
+  - name: Filings
+    description: Receiving filings from 3rd party platforms and displaying reported filings back to the platforms  regarding a danish taxpayers sharing economy transactions through a sharing economy platform.
     
 paths:
   # ------------- FilingController -------------
   /platforms/{platformId}/{assetType}-filing/{filingReference}:
     post:
       tags:
-        - filings
+        - Filings
       parameters:
         - $ref: '#/components/parameters/platformId'
         - $ref: '#/components/parameters/assetType'
         - $ref: '#/components/parameters/filingReference'
-      summary: Add or update a filing regarding a danish taxpayers sharing economy transactions through a sharing economy platform
+      summary: Create or update filing
+      description: |
+        Create a new filing or update an existing one.
+        When initially creating the filing, the sequence number in the payload needs to be 0. Whenever there is an update to a filing, the sequence number
+        must increment in order to show the latest version. 
       operationId: addFiling
       requestBody:
         $ref: '#/components/requestBodies/Filing'
@@ -61,7 +65,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessfulFiling'
+                $ref: '#/components/schemas/ShortFiling'
         400:
           description: Wrong sequenceNumber or wrong platformId was supplied
           content:
@@ -76,38 +80,14 @@ paths:
                 $ref: '#/components/schemas/FilingError'
     get:
       tags:
-        - filings
+        - Filings
       parameters:
         - $ref: '#/components/parameters/platformId'
         - $ref: '#/components/parameters/assetType'
         - $ref: '#/components/parameters/filingReference'
-      summary: Show a filing from a platform of a specific assetType with the given filingReference and sequenceNumber
+      summary: Get filing
+      description: Get the current version of a filing for an asset type.
       operationId: showFilingWithReference
-      responses:
-        200:
-          description: Returns a list of filings reported by the platform.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/ShortFiling'
-                  links:
-                    $ref: '#/components/schemas/UnversionedLink'
-
-  /platforms/{platformId}/{assetType}-filing:
-    get:
-      tags:
-        - filings
-      parameters:
-        - $ref: '#/components/parameters/platformId'
-        - $ref: '#/components/parameters/assetType'
-      summary: List all filings from a platform of a specific assetType
-      details: Details go here
-      operationId: listFilings
       responses:
         200:
           description: Returns a list of filings reported by the platform.
@@ -126,14 +106,47 @@ paths:
   /platforms/{platformId}/{assetType}-filing/{filingReference}/{sequenceNumber}:
     get:
       tags:
-        - filings
+        - Filings
       parameters:
         - $ref: '#/components/parameters/platformId'
         - $ref: '#/components/parameters/assetType'
         - $ref: '#/components/parameters/filingReference'
         - $ref: '#/components/parameters/sequenceNumber'
-      summary: Show a filing from a platform of a specific assetType with the given filingReference and sequenceNumber
+      summary: Get filing version
+      description: Get a specific version of a filing where the sequence number denotes the desired version.
       operationId: showFilingWithSequence
+      responses:
+        200:
+          description: Returns the specified version of a filing.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ShortFiling'
+                  links:
+                    $ref: '#/components/schemas/UnversionedLink'
+        404:
+          description: The given filingReference or sequenceNumber does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFound"
+
+  /platforms/{platformId}/{assetType}-filing/{filingReference}/versions:
+    get:
+      tags:
+        - Filings
+      parameters:
+        - $ref: '#/components/parameters/platformId'
+        - $ref: '#/components/parameters/assetType'
+        - $ref: '#/components/parameters/filingReference'
+      summary: Get all versions of filing
+      description: Shows current version as well as all previous versions of a filing.
+      operationId: listFilingsWithReference
       responses:
         200:
           description: Returns a list of filings reported by the platform.
@@ -148,17 +161,17 @@ paths:
                       $ref: '#/components/schemas/ShortFiling'
                   links:
                     $ref: '#/components/schemas/UnversionedLink'
-
-  /platforms/{platformId}/{assetType}-filing/{filingReference}/versions:
+                
+  /platforms/{platformId}/{assetType}-filing:
     get:
       tags:
-        - filings
+        - Filings
       parameters:
         - $ref: '#/components/parameters/platformId'
         - $ref: '#/components/parameters/assetType'
-        - $ref: '#/components/parameters/filingReference'
-      summary: Show all filings and updates from a platform of a specific assetType with the given filingReference
-      operationId: listFilingsWithReference
+      summary: Get all filings of type (NOTE - Koden understøtter ikke denne funktionalitet)
+      description: List all filings from a platform of a specific assetType
+      operationId: listFilings
       responses:
         200:
           description: Returns a list of filings reported by the platform.
@@ -196,23 +209,22 @@ components:
           - boat
       required: true
       description: The assets type, one of the three following values - accommodation, vehicle, boat
-      example: "accommodation"
     filingReference:
       in: path
       name: filingReference
       schema:
         type: string
       required: true
-      description: The 3rd party platforms identifier for a platform
+      description: The 3rd party platform's identifier for a filing
       example: "2a0f1f82-8ebf-418f-bbd8-b018f33a6971"
     sequenceNumber:
       in: path
       name: sequenceNumber
       schema:
-        type: string
+        type: integer
       required: true
-      description: The 3rd party platforms identifier for a platform
-      example: "0"
+      description: The sequence/verson number of a filing starting at zero while incrementing with each change
+      example: '0'
   # ------------- Schemas -------------
   schemas:
     # ------------- 2xx -------------
@@ -267,7 +279,7 @@ components:
 
     # ------------- Reusable entities -------------
     
-    AccomodationFiling:
+    Accomodation-Filing:
       description: An accommodation filing
       allOf:
         - $ref: '#/components/schemas/Filing'
@@ -295,7 +307,8 @@ components:
                                 
                         
     
-    VehicleFiling:
+    Vehicle-Filing:
+      title: "test"
       description: A vehicle filing
       allOf:
         - $ref: '#/components/schemas/Filing'
@@ -308,7 +321,7 @@ components:
                   type: string
                   default: "vehicle-filing"
     
-    BoatFiling:
+    Boat-Filing:
       description: A boat filing
       allOf:
         - $ref: '#/components/schemas/Filing'
@@ -325,6 +338,12 @@ components:
       required:
         - data
       type: object
+      discriminator:
+        properties:
+          data:
+            type: class
+            properties:
+              type: object
       properties:
         data:
           type: object
@@ -332,9 +351,6 @@ components:
             - type
             - attributes
           properties:
-              type:
-                type: string
-                example: "accommodation-filing"
               attributes:
                 type: object
                 required:
@@ -406,10 +422,10 @@ components:
       properties:
         countryCode:
           type: string
-          example: ""
+          example: "DK"
         addressLine1:
           type: string
-          example: ""
+          example: "Gadenavn, 42A, 3.th, København SV"
         addressLine2:
           type: string
           example: ""
@@ -448,17 +464,17 @@ components:
           example: "th"
         postCode:
           type: integer
-          example: "DK"
+          example: 2450
         city:
           type: string
-          example: "København N"
+          example: "København SV"
 
     ShortFiling:
       type: object
       properties:
         id:
           type: string
-          example: "12345"
+          example: "2a0f1f82-8ebf-418f-bbd8-b018f33a6971"
         type:
           type: string
           example: "accommodation-filing"
@@ -472,7 +488,7 @@ components:
           properties:
             filingReference:
               type: string
-              example: "12345"
+              example: "2a0f1f82-8ebf-418f-bbd8-b018f33a6971"
             sequenceNumber:
               type: string
               example: "0"
@@ -522,6 +538,17 @@ components:
         self:
           type: string
           example: "/platforms/85232389-c876-40a4-9b67-f95eec44825d/accommodation-filings"
+    
+    NotFound:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Not Found"
+        error:
+          type: integer
+          example: 404
+
           
   requestBodies:
     Filing:
@@ -529,10 +556,8 @@ components:
         application/json:
           schema:
             allOf:
-              - description: My Pet
-                title: Pettie
+              - description: filing
               - $ref: '#/components/schemas/Filing'
-      description: Pet object that needs to be added to the store
       required: true
 #  securitySchemes:
 #    api_key:
