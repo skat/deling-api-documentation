@@ -420,7 +420,7 @@
                           "asset": {
                             "type": "object",
                             "properties": {
-                              "address": {
+                              "structuredAddress": {
                                 "oneOf": [
                                   {
                                     "$ref": "#/components/schemas/structuredAddress"
