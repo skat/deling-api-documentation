@@ -1,16 +1,16 @@
 openapi: 3.0.2
 servers:
-  - url: http://del.skat.dk/
+  - url: 'http://del.skat.dk/'
 x-servers:
-  - url: http://del.skat.dk/
+  - url: 'http://del.skat.dk/'
 info:
   description: |
-   
+
     # Introduction
     This is the API for receiving filings concerning citizens taxable transactions, from sharing economy platforms, for project DEL (Deleøkonomi).
     This REST API is built, in order for platforms to send in relevant income data to Skatteforvaltningen on their users and their rentals.
 
-    The API is organized around REST, using JSON as the payload format. Our API has resource-oriented URLs and uses HTTP response codes to indicate API errors. JSON is returned by all API responses, including errors.
+    The API is organized around [REST](https://en.wikipedia.org/wiki/Representational_state_transfer), using JSON as the payload format. Our API has resource-oriented URLs and uses HTTP response codes to indicate API errors. JSON is returned by all API responses, including errors.
 
     The API allows manipulation of three types of resources:
       - vehicle filings
@@ -19,8 +19,49 @@ info:
       
     A filing resource is uniquely identified by a platformId and a filingReference. In case multiple versions of the resource have been created these can be distinguished by a sequence number which is part of the payload. The sequence number starts at zero and increments by one for every new version of the filing.
 
-    # Authentication
-    Put authentication information here.
+    # URL
+    The path structure for creating a filing resource has the following structure:
+
+    ```POST <host>/platforms/<platformId>/<assetType>-filings/<filingReference>```
+    
+    The three placeholders have the following semantics:
+    - platformId - the ID assigned to the platform during the onboarding-process.
+    - assetType - the asset type being filed for. Currently vehicle, boat or accommodation.
+    - filingReference - the platform's internal reference for the filing. 
+
+    Here is an example for the initial filing for a car:   
+
+    ```POST <host>/platforms/85232389-c876-40a4-9b67-f95eec44825d/vehicle-filings/1234567```
+
+    To get the filing resource use the following url:
+
+    ```GET <host>/platforms/85232389-c876-40a4-9b67-f95eec44825d/vehicle-filings/1234567```
+
+    # Requests
+    Every request to the api must have the following two headers:
+    - X-Transaktions-ID
+    - X-Request-ID
+
+    Each must be a unique UUIDv4 for every request. 
+
+    # Corrections
+    There are two types of filings:
+    - Regular filings. These filing contain actual business data about revenue inside a filingData-element in the JSON payload.
+    - Invalidations - these void whatever was filed previously for the given filing resource. The invalidation has no filingData-element.
+    Whenever a new version of a resource is created, the old one is disregarded. 
+
+    The following example flow illustrates how a resource is created, corrected and invalidated:
+
+    | sequenceNumber | has filingData-element | Http status | current sequenceNumber    | Description                                                 |
+    |----------------|------------------------|-------------|---------------------------|-------------------------------------------------------------|
+    | 0              | yes                    | 201         | 0                         | Filing is filed                                             |
+    | 1              | yes                    | 400         | no current sequenceNumber | The sequence number has to be 0 in the initial filing       | 
+    | 1              | no                     | 201         | 1                         | This is an invalidation, old resource is disregarded        | 
+    | 2              | no                     | 201         | 2                         | An invalidation, old resource is disregarded                | 
+    | 3              | yes                    | 400         | 1                         | Wrong sequence number, expected 2                           | 
+    | 3              | yes                    | 201         | 3                         | New version of filing is filed, old resource is disregarded | 
+    | 4              | yes                    | 201         | 4                         | New version of filing is filed, old resource is disregarded | 
+
 
   version: 1.0.0
   title: Filing API
@@ -36,14 +77,12 @@ info:
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
 externalDocs:
   description: See the repo here
-  url: https://github.ccta.dk/TeamDelta/filing-api
+  url: 'https://github.ccta.dk/TeamDelta/filing-api'
 tags:
   - name: Filings
     description: Receiving filings from 3rd party platforms and displaying reported filings back to the platforms  regarding a danish taxpayers sharing economy transactions through a sharing economy platform.
-    
 paths:
-  # ------------- FilingController -------------
-  /platforms/{platformId}/{assetType}-filing/{filingReference}:
+  '/platforms/{platformId}/{assetType}-filing/{filingReference}':
     post:
       tags:
         - Filings
@@ -58,21 +97,35 @@ paths:
         must increment in order to show the latest version. 
       operationId: addFiling
       requestBody:
-        $ref: '#/components/requestBodies/Filing'
+        description: |
+          Posting a filing requires a payload body in the form of json. Depending on the type of filing the json must be validated against the following schemas:
+
+          [Accommodation-filing](https://en.wikipedia.org/wiki/Representational_state_transfer)
+
+          [Vehicle-filing](https://en.wikipedia.org/wiki/Representational_state_transfer)
+
+          [Boat-filing](https://en.wikipedia.org/wiki/Representational_state_transfer)
+
+        required: true
+        content:
+          application/json: {}
+            #schema:
+             # $ref: "#/components/schemas/HttpRef"
+          
       responses:
-        201:
+        '201':
           description: A correct filing was submitted
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ShortFiling'
-        400:
+        '400':
           description: Wrong sequenceNumber or wrong platformId was supplied
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/FilingError'
-        503:
+        '503':
           description: Unknown token was supplied
           content:
             application/json:
@@ -89,7 +142,7 @@ paths:
       description: Get the current version of a filing for an asset type.
       operationId: showFilingWithReference
       responses:
-        200:
+        '200':
           description: Returns a list of filings reported by the platform.
           content:
             application/json:
@@ -102,8 +155,7 @@ paths:
                       $ref: '#/components/schemas/ShortFiling'
                   links:
                     $ref: '#/components/schemas/UnversionedLink'
-
-  /platforms/{platformId}/{assetType}-filing/{filingReference}/{sequenceNumber}:
+  '/platforms/{platformId}/{assetType}-filing/{filingReference}/{sequenceNumber}':
     get:
       tags:
         - Filings
@@ -116,7 +168,7 @@ paths:
       description: Get a specific version of a filing where the sequence number denotes the desired version.
       operationId: showFilingWithSequence
       responses:
-        200:
+        '200':
           description: Returns the specified version of a filing.
           content:
             application/json:
@@ -129,14 +181,13 @@ paths:
                       $ref: '#/components/schemas/ShortFiling'
                   links:
                     $ref: '#/components/schemas/UnversionedLink'
-        404:
+        '404':
           description: The given filingReference or sequenceNumber does not exist
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/NotFound"
-
-  /platforms/{platformId}/{assetType}-filing/{filingReference}/versions:
+                $ref: '#/components/schemas/NotFound'
+  '/platforms/{platformId}/{assetType}-filing/{filingReference}/versions':
     get:
       tags:
         - Filings
@@ -148,7 +199,7 @@ paths:
       description: Shows current version as well as all previous versions of a filing.
       operationId: listFilingsWithReference
       responses:
-        200:
+        '200':
           description: Returns a list of filings reported by the platform.
           content:
             application/json:
@@ -161,8 +212,7 @@ paths:
                       $ref: '#/components/schemas/ShortFiling'
                   links:
                     $ref: '#/components/schemas/UnversionedLink'
-                
-  /platforms/{platformId}/{assetType}-filing:
+  '/platforms/{platformId}/{assetType}-filing':
     get:
       tags:
         - Filings
@@ -173,7 +223,7 @@ paths:
       description: List all filings from a platform of a specific assetType
       operationId: listFilings
       responses:
-        200:
+        '200':
           description: Returns a list of filings reported by the platform.
           content:
             application/json:
@@ -186,9 +236,7 @@ paths:
                       $ref: '#/components/schemas/ShortFiling'
                   links:
                     $ref: '#/components/schemas/UnversionedLink'
-
 components:
-  # ------------- Path Parameters -------------
   parameters:
     platformId:
       in: path
@@ -197,7 +245,7 @@ components:
       schema:
         type: string
       description: uuid of the platform that is sending the request
-      example: "b410b282-168e-4ebe-805a-e73df079769d"
+      example: b410b282-168e-4ebe-805a-e73df079769d
     assetType:
       in: path
       name: assetType
@@ -208,7 +256,7 @@ components:
           - vehicle
           - boat
       required: true
-      description: The assets type, one of the three following values - accommodation, vehicle, boat
+      description: 'The assets type, one of the three following values - accommodation, vehicle, boat'
     filingReference:
       in: path
       name: filingReference
@@ -216,7 +264,7 @@ components:
         type: string
       required: true
       description: The 3rd party platform's identifier for a filing
-      example: "2a0f1f82-8ebf-418f-bbd8-b018f33a6971"
+      example: 2a0f1f82-8ebf-418f-bbd8-b018f33a6971
     sequenceNumber:
       in: path
       name: sequenceNumber
@@ -225,9 +273,7 @@ components:
       required: true
       description: The sequence/verson number of a filing starting at zero while incrementing with each change
       example: '0'
-  # ------------- Schemas -------------
   schemas:
-    # ------------- 2xx -------------
     SuccessfulFiling:
       required:
         - data
@@ -247,8 +293,7 @@ components:
           properties:
             self:
               type: string
-              example: "/platforms/85232389-c876-40a4-9b67-f95eec44825d/accommodation-filings/123456"
-    # ------------- 4xx -------------
+              example: /platforms/85232389-c876-40a4-9b67-f95eec44825d/accommodation-filings/123456
     FilingError:
       required:
         - errors
@@ -263,7 +308,7 @@ components:
           properties:
             title:
               type: string
-              example: "Wrong sequenceNumber"
+              example: Wrong sequenceNumber
             source:
               type: object
               required:
@@ -271,26 +316,22 @@ components:
               properties:
                 pointer:
                   type: string
-                  example: "#/data/attributes/sequenceNumber"
+                  example: '#/data/attributes/sequenceNumber'
             detail:
               type: string
-              example: "The value for sequenceNumber was 1 in the payload, but 2 was expected"
-    # ------------- 5xx -------------
-
-    # ------------- Reusable entities -------------
-    
+              example: 'The value for sequenceNumber was 1 in the payload, but 2 was expected'
     Accomodation-Filing:
       description: An accommodation filing
       allOf:
         - $ref: '#/components/schemas/Filing'
         - type: object
           properties:
-            data: 
+            data:
               type: object
               properties:
                 type:
                   type: string
-                  default: "accommodation-filing"
+                  default: accommodation-filing
                 attributes:
                   type: object
                   properties:
@@ -300,40 +341,35 @@ components:
                         asset:
                           type: object
                           properties:
-                            address: 
+                            structuredAddress:
                               oneOf:
                                 - $ref: '#/components/schemas/structuredAddress'
                                 - $ref: '#/components/schemas/unstructuredAddress'
-                                
-                        
-    
     Vehicle-Filing:
-      title: "test"
+      title: test
       description: A vehicle filing
       allOf:
         - $ref: '#/components/schemas/Filing'
         - type: object
           properties:
-            data: 
+            data:
               type: object
               properties:
                 type:
                   type: string
-                  default: "vehicle-filing"
-    
+                  default: vehicle-filing
     Boat-Filing:
       description: A boat filing
       allOf:
         - $ref: '#/components/schemas/Filing'
         - type: object
           properties:
-            data: 
+            data:
               type: object
               properties:
                 type:
                   type: string
-                  default: "boat-filing"
-    
+                  default: boat-filing
     Filing:
       required:
         - data
@@ -351,66 +387,65 @@ components:
             - type
             - attributes
           properties:
-              attributes:
-                type: object
-                required:
-                  - sequenceNumber
-                  - filingData
-                properties:
-                  sequenceNumber:
-                    type: integer
-                    example: 0
-                  filingData:
-                    type: object
-                    required:
-                      - personIdToken
-                      - amount
-                      - currency
-                      - startTimestamp
-                      - endTimestamp
-                      - paymentTimestamp
-                      - asset
-                    properties:
-                      personIdToken:
-                        type: string
-                        example: "46970070-0aa2-4d4c-bad9-aa18a248d5cb"
-                      amount:
-                        type: integer
-                        example: 795.51
-                      currency:
-                        type: string
-                        example: "DKK"
-                      startTimestamp:
-                        type: string
-                        format: date-time
-                      endTimestamp:
-                        type: string
-                        format: date-time
-                      paymentTimestamp:
-                        type: string
-                        format: date-time
-                      asset:
-                        type: object
-                        properties:
-                          assetUniqueId:
-                            type: string
-                            example: ""
-                          assetCountryCode:
-                            type: string
-                            example: "DK"
-                          level1:
-                            type: string
-                            example: ""
-                          level2:
-                            type: string
-                            example: ""
-                          level3:
-                            type: string
-                            example: ""
-                          level4:
-                            type: string
-                            example: ""
-
+            attributes:
+              type: object
+              required:
+                - sequenceNumber
+                - filingData
+              properties:
+                sequenceNumber:
+                  type: integer
+                  example: 0
+                filingData:
+                  type: object
+                  required:
+                    - personIdToken
+                    - amount
+                    - currency
+                    - startTimestamp
+                    - endTimestamp
+                    - paymentTimestamp
+                    - asset
+                  properties:
+                    personIdToken:
+                      type: string
+                      example: 46970070-0aa2-4d4c-bad9-aa18a248d5cb
+                    amount:
+                      type: integer
+                      example: 795.51
+                    currency:
+                      type: string
+                      example: DKK
+                    startTimestamp:
+                      type: string
+                      format: date-time
+                    endTimestamp:
+                      type: string
+                      format: date-time
+                    paymentTimestamp:
+                      type: string
+                      format: date-time
+                    asset:
+                      type: object
+                      properties:
+                        assetUniqueId:
+                          type: string
+                          example: ''
+                        assetCountryCode:
+                          type: string
+                          example: DK
+                        level1:
+                          type: string
+                          example: ''
+                        level2:
+                          type: string
+                          example: ''
+                        level3:
+                          type: string
+                          example: ''
+                        level4:
+                          type: string
+                          example: ''
     unstructuredAddress:
       type: object
       required:
@@ -422,20 +457,19 @@ components:
       properties:
         countryCode:
           type: string
-          example: "DK"
+          example: DK
         addressLine1:
           type: string
-          example: "Gadenavn, 42A, 3.th, København SV"
+          example: 'Gadenavn, 42A, 3.th, København SV'
         addressLine2:
           type: string
-          example: ""
+          example: ''
         addressLine3:
           type: string
-          example: ""
+          example: ''
         addressLine4:
           type: string
-          example: ""
-
+          example: ''
     structuredAddress:
       type: object
       required:
@@ -449,35 +483,34 @@ components:
       properties:
         countryCode:
           type: string
-          example: "DK"
+          example: DK
         street:
           type: string
-          example: "Gadenavn"
+          example: Gadenavn
         buildingIdentifier:
           type: string
-          example: "42A"
+          example: 42A
         floorIdentifier:
           type: string
-          example: "3"
+          example: '3'
         doorId:
           type: string
-          example: "th"
+          example: th
         postCode:
           type: integer
           example: 2450
         city:
           type: string
-          example: "København SV"
-
+          example: København SV
     ShortFiling:
       type: object
       properties:
         id:
           type: string
-          example: "2a0f1f82-8ebf-418f-bbd8-b018f33a6971"
+          example: 2a0f1f82-8ebf-418f-bbd8-b018f33a6971
         type:
           type: string
-          example: "accommodation-filing"
+          example: accommodation-filing
         attributes:
           type: object
           required:
@@ -488,13 +521,13 @@ components:
           properties:
             filingReference:
               type: string
-              example: "2a0f1f82-8ebf-418f-bbd8-b018f33a6971"
+              example: 2a0f1f82-8ebf-418f-bbd8-b018f33a6971
             sequenceNumber:
               type: string
-              example: "0"
+              example: '0'
             platformId:
               type: string
-              example: "85232389-c876-40a4-9b67-f95eec44825d"
+              example: 85232389-c876-40a4-9b67-f95eec44825d
             filingData:
               type: object
               required:
@@ -506,22 +539,21 @@ components:
               properties:
                 amount:
                   type: number
-                  example: 1234.0
+                  example: 1234
                 currency:
                   type: string
-                  example: "DKK"
+                  example: DKK
                 startTimestamp:
                   type: string
-                  example: "2019-03-12T12:41:10.218Z"
+                  example: '2019-03-12T12:41:10.218Z'
                 endTimestamp:
                   type: string
-                  example: "2019-03-12T12:41:10.218Z"
+                  example: '2019-03-12T12:41:10.218Z'
                 paymentTimestamp:
                   type: string
-                  example: "2019-03-12T12:41:10.218Z"
+                  example: '2019-03-12T12:41:10.218Z'
         links:
           $ref: '#/components/schemas/VersionedLink'
-
     VersionedLink:
       required:
         - self
@@ -529,7 +561,7 @@ components:
       properties:
         self:
           type: string
-          example: "/platforms/85232389-c876-40a4-9b67-f95eec44825d/accommodation-filings/12345/versions/0"
+          example: /platforms/85232389-c876-40a4-9b67-f95eec44825d/accommodation-filings/12345/versions/0
     UnversionedLink:
       required:
         - self
@@ -537,19 +569,18 @@ components:
       properties:
         self:
           type: string
-          example: "/platforms/85232389-c876-40a4-9b67-f95eec44825d/accommodation-filings"
-    
+          example: /platforms/85232389-c876-40a4-9b67-f95eec44825d/accommodation-filings
     NotFound:
       type: object
       properties:
         message:
           type: string
-          example: "Not Found"
+          example: Not Found
         error:
           type: integer
           example: 404
-
-          
+    HttpRef:
+      $ref: "http://localhost:3000/accommodation-filing.json"
   requestBodies:
     Filing:
       content:
@@ -559,8 +590,3 @@ components:
               - description: filing
               - $ref: '#/components/schemas/Filing'
       required: true
-#  securitySchemes:
-#    api_key:
-#      type: apiKey
-#      in: header
-#      name: X-API-KEY
