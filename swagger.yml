@@ -75,9 +75,6 @@ info:
   license:
     name: Apache 2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
-externalDocs:
-  description: See the repo here
-  url: 'https://github.ccta.dk/TeamDelta/filing-api'
 tags:
   - name: Filings
     description: Receiving filings from 3rd party platforms and displaying reported filings back to the platforms  regarding a danish taxpayers sharing economy transactions through a sharing economy platform.
@@ -100,25 +97,22 @@ paths:
         description: |
           Posting a filing requires a payload body in the form of json. Depending on the type of filing the json must be validated against the following schemas:
 
-          [Accommodation-filing](https://en.wikipedia.org/wiki/Representational_state_transfer)
+          [Accommodation-filing](https://raw.githubusercontent.com/skat/deling-api-documentation/master/documentation/generated-schemas/accommodation-filing.json)
 
-          [Vehicle-filing](https://en.wikipedia.org/wiki/Representational_state_transfer)
-
-          [Boat-filing](https://en.wikipedia.org/wiki/Representational_state_transfer)
-
-        required: true
-        content:
-          application/json: {}
-            #schema:
-             # $ref: "#/components/schemas/HttpRef"
+          [Vehicle-filing](https://raw.githubusercontent.com/skat/deling-api-documentation/master/documentation/generated-schemas/vehicle-filing.json)
           
+          [Boat-filing](https://raw.githubusercontent.com/skat/deling-api-documentation/master/documentation/generated-schemas/boat-filing.json)
+        content:
+            schema:
+              example: 
+                $ref: "https://raw.githubusercontent.com/skat/deling-api-documentation/master/documentation/generated-requests/accommodation-filing.json"
       responses:
         '201':
           description: A correct filing was submitted
           content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ShortFiling'
+            schema:
+              example: 
+                $ref: "https://raw.githubusercontent.com/skat/deling-api-documentation/master/documentation/generated-responses/accommodation-filing.json"
         '400':
           description: Wrong sequenceNumber or wrong platformId was supplied
           content:
@@ -145,16 +139,9 @@ paths:
         '200':
           description: Returns a list of filings reported by the platform.
           content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/ShortFiling'
-                  links:
-                    $ref: '#/components/schemas/UnversionedLink'
+            schema:
+              example: 
+                $ref: "https://raw.githubusercontent.com/skat/deling-api-documentation/master/documentation/generated-responses/accommodation-filing.json"
   '/platforms/{platformId}/{assetType}-filing/{filingReference}/{sequenceNumber}':
     get:
       tags:
@@ -171,22 +158,15 @@ paths:
         '200':
           description: Returns the specified version of a filing.
           content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/ShortFiling'
-                  links:
-                    $ref: '#/components/schemas/UnversionedLink'
+            schema:
+              example: 
+                $ref: 'https://raw.githubusercontent.com/skat/deling-api-documentation/master/documentation/generated-responses/accommodation-filing.json'
         '404':
           description: The given filingReference or sequenceNumber does not exist
           content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFound'
+            schema:
+              example: 
+                $ref: 'https://raw.githubusercontent.com/skat/deling-api-documentation/master/documentation/generated-responses/notFound.json'
   '/platforms/{platformId}/{assetType}-filing/{filingReference}/versions':
     get:
       tags:
@@ -202,16 +182,9 @@ paths:
         '200':
           description: Returns a list of filings reported by the platform.
           content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/ShortFiling'
-                  links:
-                    $ref: '#/components/schemas/UnversionedLink'
+            schema:
+              example: 
+                $ref: "https://raw.githubusercontent.com/skat/deling-api-documentation/master/documentation/generated-responses/accommodation-filing.json"
   '/platforms/{platformId}/{assetType}-filing':
     get:
       tags:
@@ -226,16 +199,9 @@ paths:
         '200':
           description: Returns a list of filings reported by the platform.
           content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/ShortFiling'
-                  links:
-                    $ref: '#/components/schemas/UnversionedLink'
+            schema:
+              example: 
+                $ref: "https://raw.githubusercontent.com/skat/deling-api-documentation/master/documentation/generated-responses/accommodation-filing.json"
 components:
   parameters:
     platformId:
@@ -320,271 +286,4 @@ components:
             detail:
               type: string
               example: 'The value for sequenceNumber was 1 in the payload, but 2 was expected'
-    Accomodation-Filing:
-      description: An accommodation filing
-      allOf:
-        - $ref: '#/components/schemas/Filing'
-        - type: object
-          properties:
-            data:
-              type: object
-              properties:
-                type:
-                  type: string
-                  default: accommodation-filing
-                attributes:
-                  type: object
-                  properties:
-                    filingData:
-                      type: object
-                      properties:
-                        asset:
-                          type: object
-                          properties:
-                            structuredAddress:
-                              oneOf:
-                                - $ref: '#/components/schemas/structuredAddress'
-                                - $ref: '#/components/schemas/unstructuredAddress'
-    Vehicle-Filing:
-      title: test
-      description: A vehicle filing
-      allOf:
-        - $ref: '#/components/schemas/Filing'
-        - type: object
-          properties:
-            data:
-              type: object
-              properties:
-                type:
-                  type: string
-                  default: vehicle-filing
-    Boat-Filing:
-      description: A boat filing
-      allOf:
-        - $ref: '#/components/schemas/Filing'
-        - type: object
-          properties:
-            data:
-              type: object
-              properties:
-                type:
-                  type: string
-                  default: boat-filing
-    Filing:
-      required:
-        - data
-      type: object
-      discriminator:
-        properties:
-          data:
-            type: class
-            properties:
-              type: object
-      properties:
-        data:
-          type: object
-          required:
-            - type
-            - attributes
-          properties:
-            attributes:
-              type: object
-              required:
-                - sequenceNumber
-                - filingData
-              properties:
-                sequenceNumber:
-                  type: integer
-                  example: 0
-                filingData:
-                  type: object
-                  required:
-                    - personIdToken
-                    - amount
-                    - currency
-                    - startTimestamp
-                    - endTimestamp
-                    - paymentTimestamp
-                    - asset
-                  properties:
-                    personIdToken:
-                      type: string
-                      example: 46970070-0aa2-4d4c-bad9-aa18a248d5cb
-                    amount:
-                      type: integer
-                      example: 795.51
-                    currency:
-                      type: string
-                      example: DKK
-                    startTimestamp:
-                      type: string
-                      format: date-time
-                    endTimestamp:
-                      type: string
-                      format: date-time
-                    paymentTimestamp:
-                      type: string
-                      format: date-time
-                    asset:
-                      type: object
-                      properties:
-                        assetUniqueId:
-                          type: string
-                          example: ''
-                        assetCountryCode:
-                          type: string
-                          example: DK
-                        level1:
-                          type: string
-                          example: ''
-                        level2:
-                          type: string
-                          example: ''
-                        level3:
-                          type: string
-                          example: ''
-                        level4:
-                          type: string
-                          example: ''
-    unstructuredAddress:
-      type: object
-      required:
-        - countryCode
-        - addressLine1
-        - addressLine2
-        - addressLine3
-        - addressLine4
-      properties:
-        countryCode:
-          type: string
-          example: DK
-        addressLine1:
-          type: string
-          example: 'Gadenavn, 42A, 3.th, København SV'
-        addressLine2:
-          type: string
-          example: ''
-        addressLine3:
-          type: string
-          example: ''
-        addressLine4:
-          type: string
-          example: ''
-    structuredAddress:
-      type: object
-      required:
-        - countryCode
-        - street
-        - buildingIdentifier
-        - floorIdentifier
-        - doorId
-        - postCode
-        - city
-      properties:
-        countryCode:
-          type: string
-          example: DK
-        street:
-          type: string
-          example: Gadenavn
-        buildingIdentifier:
-          type: string
-          example: 42A
-        floorIdentifier:
-          type: string
-          example: '3'
-        doorId:
-          type: string
-          example: th
-        postCode:
-          type: integer
-          example: 2450
-        city:
-          type: string
-          example: København SV
-    ShortFiling:
-      type: object
-      properties:
-        id:
-          type: string
-          example: 2a0f1f82-8ebf-418f-bbd8-b018f33a6971
-        type:
-          type: string
-          example: accommodation-filing
-        attributes:
-          type: object
-          required:
-            - filingReference
-            - sequenceNumber
-            - platformId
-            - filingData
-          properties:
-            filingReference:
-              type: string
-              example: 2a0f1f82-8ebf-418f-bbd8-b018f33a6971
-            sequenceNumber:
-              type: string
-              example: '0'
-            platformId:
-              type: string
-              example: 85232389-c876-40a4-9b67-f95eec44825d
-            filingData:
-              type: object
-              required:
-                - amount
-                - currency
-                - startTimestamp
-                - endTimestamp
-                - paymentTimestamp
-              properties:
-                amount:
-                  type: number
-                  example: 1234
-                currency:
-                  type: string
-                  example: DKK
-                startTimestamp:
-                  type: string
-                  example: '2019-03-12T12:41:10.218Z'
-                endTimestamp:
-                  type: string
-                  example: '2019-03-12T12:41:10.218Z'
-                paymentTimestamp:
-                  type: string
-                  example: '2019-03-12T12:41:10.218Z'
-        links:
-          $ref: '#/components/schemas/VersionedLink'
-    VersionedLink:
-      required:
-        - self
-      type: object
-      properties:
-        self:
-          type: string
-          example: /platforms/85232389-c876-40a4-9b67-f95eec44825d/accommodation-filings/12345/versions/0
-    UnversionedLink:
-      required:
-        - self
-      type: object
-      properties:
-        self:
-          type: string
-          example: /platforms/85232389-c876-40a4-9b67-f95eec44825d/accommodation-filings
-    NotFound:
-      type: object
-      properties:
-        message:
-          type: string
-          example: Not Found
-        error:
-          type: integer
-          example: 404
-  requestBodies:
-    Filing:
-      content:
-        application/json:
-          schema:
-            allOf:
-              - description: filing
-              - $ref: '#/components/schemas/Filing'
-      required: true
+
