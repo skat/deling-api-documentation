@@ -1,0 +1,220 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "additionalProperties": false,
+    "type": "object",
+    "title": "The Root Schema",
+    "definitions": {
+        
+    },
+    "required": [
+        "data"
+    ],
+    "properties": {
+        "data": {
+            "additionalProperties": false,
+            "type": "object",
+            "title": "The Data Schema",
+            "required": [
+                "type",
+                "attributes"
+            ],
+            "properties": {
+                "attributes": {
+                    "additionalProperties": false,
+                    "type": "object",
+                    "title": "Attributes of the filing",
+                    "required": [
+                        "sequenceNumber",
+                        "filingData"
+                    ],
+                    "properties": {
+                        "sequenceNumber": {
+                            "default": 0,
+                            "examples": [
+                                0
+                            ],
+                            "type": "integer",
+                            "title": "The Sequence number for the filing",
+                            "$id": "#/properties/data/properties/attributes/properties/sequenceNumber"
+                        },
+                        "filingData": {
+                            "oneOf": [
+                                {
+                                    "required": [
+                                        "paymentYear"
+                                    ]
+                                },
+                                {
+                                    "required": [
+                                        "paymentTimestamp"
+                                    ]
+                                }
+                            ],
+                            "additionalProperties": false,
+                            "type": "object",
+                            "title": "The Filing data",
+                            "required": [
+                                "personIdToken",
+                                "currency",
+                                "amount",
+                                "startTimestamp",
+                                "endTimestamp",
+                                "asset"
+                            ],
+                            "properties": {
+                                "personIdToken": {
+                                    "default": "",
+                                    "examples": [
+                                        "123n-123y-214n"
+                                    ],
+                                    "type": "string",
+                                    "title": "ID Token for a citizen",
+                                    "$id": "#/properties/data/properties/attributes/properties/filingData/properties/personIdToken"
+                                },
+                                "amount": {
+                                    "default": 0,
+                                    "examples": [
+                                        1.5,
+                                        100
+                                    ],
+                                    "type": "number",
+                                    "title": "The amount",
+                                    "$id": "#/properties/data/properties/attributes/properties/filingData/properties/amount"
+                                },
+                                "paymentYear": {
+                                    "default": "",
+                                    "examples": [
+                                        2019
+                                    ],
+                                    "type": "integer",
+                                    "title": "The Payment year",
+                                    "$id": "#/properties/data/properties/attributes/properties/filingData/properties/paymentYear"
+                                },
+                                "currency": {
+                                    "default": "DKK",
+                                    "examples": [
+                                        "DKK"
+                                    ],
+                                    "pattern": "^DKK$",
+                                    "type": "string",
+                                    "title": "currency",
+                                    "$id": "#/properties/data/properties/attributes/properties/filingData/properties/currency"
+                                },
+                                "asset": {
+                                    "additionalProperties": false,
+                                    "type": "object",
+                                    "title": "The Asset Schema",
+                                    "required": [
+                                        "assetUniqueId",
+                                        "assetCountryCode",
+                                        "level1",
+                                        "level2",
+                                        "level3",
+                                        "level4"
+                                    ],
+                                    "properties": {
+                                        "level4": {
+                                            "default": "",
+                                            "examples": [
+                                                ""
+                                            ],
+                                            "type": "string",
+                                            "title": "The Level4 Schema",
+                                            "$id": "#/properties/data/properties/attributes/properties/filingData/properties/asset/properties/level4"
+                                        },
+                                        "assetUniqueId": {
+                                            "default": "",
+                                            "examples": [
+                                                ""
+                                            ],
+                                            "type": "string",
+                                            "title": "The Unique asset ID",
+                                            "$id": "#/properties/data/properties/attributes/properties/filingData/properties/asset/properties/assetUniqueId"
+                                        },
+                                        "assetCountryCode": {
+                                            "default": "",
+                                            "examples": [
+                                                "DK"
+                                            ],
+                                            "type": "string",
+                                            "title": "Country code for the asset",
+                                            "$id": "#/properties/data/properties/attributes/properties/filingData/properties/asset/properties/assetCountryCode"
+                                        },
+                                        "level1": {
+                                            "default": "",
+                                            "examples": [
+                                                "boat"
+                                            ],
+                                            "type": "string",
+                                            "title": "The Level1 Schema",
+                                            "$id": "#/properties/data/properties/attributes/properties/filingData/properties/asset/properties/level1"
+                                        },
+                                        "level3": {
+                                            "default": "",
+                                            "examples": [
+                                                ""
+                                            ],
+                                            "type": "string",
+                                            "title": "The Level3 Schema",
+                                            "$id": "#/properties/data/properties/attributes/properties/filingData/properties/asset/properties/level3"
+                                        },
+                                        "level2": {
+                                            "default": "",
+                                            "examples": [
+                                                ""
+                                            ],
+                                            "type": "string",
+                                            "title": "The Level2 Schema",
+                                            "$id": "#/properties/data/properties/attributes/properties/filingData/properties/asset/properties/level2"
+                                        }
+                                    },
+                                    "$id": "#/properties/data/properties/attributes/properties/filingData/properties/asset"
+                                },
+                                "endTimestamp": {
+                                    "default": "",
+                                    "examples": [
+                                        "2019-03-12T12:41:10Z"
+                                    ],
+                                    "type": "string",
+                                    "title": "Timestamp of rental end",
+                                    "$id": "#/properties/data/properties/attributes/properties/filingData/properties/endTimestamp"
+                                },
+                                "startTimestamp": {
+                                    "default": "",
+                                    "examples": [
+                                        "2019-03-12T12:41:10Z"
+                                    ],
+                                    "type": "string",
+                                    "title": "Timestamp of rental start",
+                                    "$id": "#/properties/data/properties/attributes/properties/filingData/properties/startTimestamp"
+                                },
+                                "paymentTimestamp": {
+                                    "default": "",
+                                    "examples": [
+                                        "2019-03-12T12:41:10Z"
+                                    ],
+                                    "type": "string",
+                                    "title": "Timestamp of rental payment",
+                                    "$id": "#/properties/data/properties/attributes/properties/filingData/properties/paymentTimestamp"
+                                }
+                            },
+                            "$id": "#/properties/data/properties/attributes/properties/filingData"
+                        }
+                    },
+                    "$id": "#/properties/data/properties/attributes"
+                },
+                "type": {
+                    "default": "",
+                    "examples": [
+                        "vehicle-filing"
+                    ],
+                    "type": "string",
+                    "title": "Filing type",
+                    "$id": "#/properties/data/properties/type"
+                }
+            },
+            "$id": "#/properties/data"
+        }
+    },
+    "$id": "http://example.com/root.json"
+}

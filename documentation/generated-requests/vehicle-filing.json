@@ -1,0 +1,24 @@
+{
+    "data": {
+        "type": "vehicle-filing",
+        "attributes": {
+            "sequenceNumber": 0,
+            "filingData": {
+                "personIdToken": "12345-123123-123123",
+                "amount": 1234.0,
+                "currency": "DKK",
+                "startTimestamp": "2019-03-12T12:41:10.218Z",
+                "endTimestamp": "2019-03-12T12:41:10.218Z",
+                "paymentTimestamp": "2019-03-12T12:41:10.218Z",
+                "asset": {
+                    "assetUniqueId": "DK 12 345",
+                    "assetCountryCode": "DK",
+                    "level1": "vehicle",
+                    "level2": "",
+                    "level3": "",
+                    "level4": ""
+                }
+            }
+        }
+    }
+}
