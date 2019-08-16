@@ -579,8 +579,6 @@ components:
         error:
           type: integer
           example: 404
-    HttpRef:
-      $ref: "http://localhost:3000/accommodation-filing.json"
   requestBodies:
     Filing:
       content:
