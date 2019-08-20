@@ -115,14 +115,14 @@ paths:
         content:
             schema:
               example: 
-                $ref: "https://gist.githubusercontent.com/nikolaj291/1f184d57167622f0431605af0beb2818/raw/accommodation-filing-request.json"
+                $ref: "https://gist.githubusercontent.com/nikolaj291/1f184d57167622f0431605af0beb2818/raw/vehicle-filing-request.json"
       responses:
         '201':
           description: A correct filing was submitted
           content:
             schema:
               example: 
-                $ref: "https://gist.githubusercontent.com/nikolaj291/1f184d57167622f0431605af0beb2818/raw/accommodation-filing-response.json"
+                $ref: "https://gist.githubusercontent.com/nikolaj291/1f184d57167622f0431605af0beb2818/raw/vehicle-filing-response.json"
         '400':
           description: Wrong sequenceNumber or wrong platformId was supplied
           content:
@@ -151,7 +151,7 @@ paths:
           content:
             schema:
               example: 
-                $ref: "https://gist.githubusercontent.com/nikolaj291/1f184d57167622f0431605af0beb2818/raw/accommodation-filing-response.json"
+                $ref: "https://gist.githubusercontent.com/nikolaj291/1f184d57167622f0431605af0beb2818/raw/vehicle-filing-response.json"
   '/platforms/{platformId}/{assetType}-filing/{filingReference}/{sequenceNumber}':
     get:
       tags:
@@ -170,7 +170,7 @@ paths:
           content:
             schema:
               example: 
-                $ref: 'https://gist.githubusercontent.com/nikolaj291/1f184d57167622f0431605af0beb2818/raw/accommodation-filing-response.json'
+                $ref: 'https://gist.githubusercontent.com/nikolaj291/1f184d57167622f0431605af0beb2818/raw/vehicle-filing-response.json'
         '404':
           description: The given filingReference or sequenceNumber does not exist
           content:
@@ -194,7 +194,7 @@ paths:
           content:
             schema:
               example: 
-                $ref: "https://gist.githubusercontent.com/nikolaj291/1f184d57167622f0431605af0beb2818/raw/accommodation-filing-response.json"
+                $ref: "https://gist.githubusercontent.com/nikolaj291/1f184d57167622f0431605af0beb2818/raw/vehicle-filing-versions-response.json"
   '/platforms/{platformId}/':
     get:
       tags:
@@ -210,7 +210,7 @@ paths:
           content:
             schema:
               example: 
-                $ref: "https://gist.githubusercontent.com/nikolaj291/1f184d57167622f0431605af0beb2818/raw/accommodation-filing-response.json"
+                $ref: "https://gist.githubusercontent.com/nikolaj291/1f184d57167622f0431605af0beb2818/raw/vehicle-filing-response.json"
   '/platforms/{platformId}/{assetType}-filing':
     get:
       tags:
@@ -227,7 +227,7 @@ paths:
           content:
             schema:
               example: 
-                $ref: "https://gist.githubusercontent.com/nikolaj291/1f184d57167622f0431605af0beb2818/raw/accommodation-filing-response.json"
+                $ref: "https://gist.githubusercontent.com/nikolaj291/1f184d57167622f0431605af0beb2818/raw/vehicle-filing-response.json"
 components:
   parameters:
     platformId:
