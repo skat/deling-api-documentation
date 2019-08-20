@@ -106,11 +106,11 @@ paths:
         description: |
           Posting a filing requires a payload body in the form of json. Depending on the type of filing the json must be validated against the following schemas:
 
-          [Accommodation-filing](https://en.wikipedia.org/wiki/Representational_state_transfer)
+          [Accommodation-filing](https://gist.githubusercontent.com/nikolaj291/1f184d57167622f0431605af0beb2818/raw/accommodation-filing-schema.json)
 
-          [Vehicle-filing](https://en.wikipedia.org/wiki/Representational_state_transfer)
+          [Vehicle-filing](https://gist.githubusercontent.com/nikolaj291/1f184d57167622f0431605af0beb2818/raw/vehicle-filing-schema.json)
           
-          [Boat-filing](https://en.wikipedia.org/wiki/Representational_state_transfer)
+          [Boat-filing](https://gist.githubusercontent.com/nikolaj291/1f184d57167622f0431605af0beb2818/raw/boat-filing-schema.json)
 
         content:
             schema:
@@ -176,7 +176,7 @@ paths:
           content:
             schema:
               example: 
-                $ref: 'https://gist.githubusercontent.com/nikolaj291/1f184d57167622f0431605af0beb2818/raw/accommodation-filing-response.json'
+                $ref: 'https://gist.githubusercontent.com/nikolaj291/1f184d57167622f0431605af0beb2818/raw/not-found-response.json'
   '/platforms/{platformId}/{assetType}-filing/{filingReference}/versions':
     get:
       tags:
