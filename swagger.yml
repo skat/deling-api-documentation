@@ -78,7 +78,7 @@ info:
   contact:
     email: ufst-deleokonomi@ufst.dk
   x-logo:
-    url: 'https://raw.githubusercontent.com/skat/deling-api-documentation/master/skatteministeret_logo_small2.png'
+    url: 'https://raw.githubusercontent.com/skat/deling-api-documentation/master/skatteministeret_logo.png'
     altText: Skatteministeriet Logo
     href: ''
   license:
