@@ -113,14 +113,14 @@ paths:
           [Boat-filing](https://gist.githubusercontent.com/nikolaj291/1f184d57167622f0431605af0beb2818/raw/boat-filing-schema.json)
 
         content:
-            schema:
-              example: 
-                $ref: "https://gist.githubusercontent.com/nikolaj291/1f184d57167622f0431605af0beb2818/raw/vehicle-filing-request.json"
+          application/json:
+            example: 
+              $ref: "https://gist.githubusercontent.com/nikolaj291/1f184d57167622f0431605af0beb2818/raw/vehicle-filing-request.json"
       responses:
         '201':
           description: A correct filing was submitted
           content:
-            schema:
+            application/json:
               example: 
                 $ref: "https://gist.githubusercontent.com/nikolaj291/1f184d57167622f0431605af0beb2818/raw/vehicle-filing-response.json"
         '400':
