@@ -149,7 +149,7 @@ paths:
         '200':
           description: Returns a list of filings reported by the platform.
           content:
-            schema:
+            application/json:
               example: 
                 $ref: "https://gist.githubusercontent.com/nikolaj291/1f184d57167622f0431605af0beb2818/raw/vehicle-filing-response.json"
   '/platforms/{platformId}/{assetType}-filing/{filingReference}/{sequenceNumber}':
@@ -168,13 +168,13 @@ paths:
         '200':
           description: Returns the specified version of a filing.
           content:
-            schema:
+            application/json:
               example: 
                 $ref: 'https://gist.githubusercontent.com/nikolaj291/1f184d57167622f0431605af0beb2818/raw/vehicle-filing-response.json'
         '404':
           description: The given filingReference or sequenceNumber does not exist
           content:
-            schema:
+            application/json:
               example: 
                 $ref: 'https://gist.githubusercontent.com/nikolaj291/1f184d57167622f0431605af0beb2818/raw/not-found-response.json'
   '/platforms/{platformId}/{assetType}-filing/{filingReference}/versions':
@@ -192,7 +192,7 @@ paths:
         '200':
           description: Returns a list of filings reported by the platform.
           content:
-            schema:
+            application/json:
               example: 
                 $ref: "https://gist.githubusercontent.com/nikolaj291/1f184d57167622f0431605af0beb2818/raw/vehicle-filing-versions-response.json"
   '/platforms/{platformId}/':
@@ -208,7 +208,7 @@ paths:
         '200':
           description: Returns a list of filings reported by the platform.
           content:
-            schema:
+            application/json:
               example: 
                 $ref: "https://gist.githubusercontent.com/nikolaj291/1f184d57167622f0431605af0beb2818/raw/vehicle-filing-response.json"
   '/platforms/{platformId}/{assetType}-filing':
@@ -225,7 +225,7 @@ paths:
         '200':
           description: Returns a list of filings reported by the platform.
           content:
-            schema:
+            application/json:
               example: 
                 $ref: "https://gist.githubusercontent.com/nikolaj291/1f184d57167622f0431605af0beb2818/raw/vehicle-filing-response.json"
 components:
