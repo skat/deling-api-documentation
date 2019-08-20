@@ -37,6 +37,15 @@ info:
 
     ```GET <host>/platforms/85232389-c876-40a4-9b67-f95eec44825d/vehicle-filings/1234567```
 
+    # PersonIdToken
+    The tax payers are linked to your platform through a unique ID-token where one of the fields in the post payload contains this information.
+    This token will be generated the first time they allow your platform to report on their behalf, but until we are in production however,
+    you can use any of the ones below for testing purposes.
+
+    | Tokens    |
+    |-----------|
+    | 123456789 |
+
     # Requests
     Every request to the api must have the following two headers:
     - X-Transaktions-ID
@@ -50,7 +59,7 @@ info:
     - Invalidations - these void whatever was filed previously for the given filing resource. The invalidation has no filingData-element.
     Whenever a new version of a resource is created, the old one is disregarded. 
 
-    The following example flow illustrates how a resource is created, corrected and invalidated:
+    The following example flow illustrates how a resource is created, corrected and invalidated.
 
     | sequenceNumber | has filingData-element | Http status | current sequenceNumber    | Description                                                 |
     |----------------|------------------------|-------------|---------------------------|-------------------------------------------------------------|
@@ -97,22 +106,23 @@ paths:
         description: |
           Posting a filing requires a payload body in the form of json. Depending on the type of filing the json must be validated against the following schemas:
 
-          [Accommodation-filing](https://raw.githubusercontent.com/skat/deling-api-documentation/master/documentation/generated-schemas/accommodation-filing.json)
+          [Accommodation-filing](https://en.wikipedia.org/wiki/Representational_state_transfer)
 
-          [Vehicle-filing](https://raw.githubusercontent.com/skat/deling-api-documentation/master/documentation/generated-schemas/vehicle-filing.json)
+          [Vehicle-filing](https://en.wikipedia.org/wiki/Representational_state_transfer)
           
-          [Boat-filing](https://raw.githubusercontent.com/skat/deling-api-documentation/master/documentation/generated-schemas/boat-filing.json)
+          [Boat-filing](https://en.wikipedia.org/wiki/Representational_state_transfer)
+
         content:
             schema:
               example: 
-                $ref: "https://raw.githubusercontent.com/skat/deling-api-documentation/master/documentation/generated-requests/accommodation-filing.json"
+                $ref: "https://gist.githubusercontent.com/nikolaj291/1f184d57167622f0431605af0beb2818/raw/accommodation-filing-request.json"
       responses:
         '201':
           description: A correct filing was submitted
           content:
             schema:
               example: 
-                $ref: "https://raw.githubusercontent.com/skat/deling-api-documentation/master/documentation/generated-responses/accommodation-filing.json"
+                $ref: "https://gist.githubusercontent.com/nikolaj291/1f184d57167622f0431605af0beb2818/raw/accommodation-filing-response.json"
         '400':
           description: Wrong sequenceNumber or wrong platformId was supplied
           content:
@@ -141,7 +151,7 @@ paths:
           content:
             schema:
               example: 
-                $ref: "https://raw.githubusercontent.com/skat/deling-api-documentation/master/documentation/generated-responses/accommodation-filing.json"
+                $ref: "https://gist.githubusercontent.com/nikolaj291/1f184d57167622f0431605af0beb2818/raw/accommodation-filing-response.json"
   '/platforms/{platformId}/{assetType}-filing/{filingReference}/{sequenceNumber}':
     get:
       tags:
@@ -160,13 +170,13 @@ paths:
           content:
             schema:
               example: 
-                $ref: 'https://raw.githubusercontent.com/skat/deling-api-documentation/master/documentation/generated-responses/accommodation-filing.json'
+                $ref: 'https://gist.githubusercontent.com/nikolaj291/1f184d57167622f0431605af0beb2818/raw/accommodation-filing-response.json'
         '404':
           description: The given filingReference or sequenceNumber does not exist
           content:
             schema:
               example: 
-                $ref: 'https://raw.githubusercontent.com/skat/deling-api-documentation/master/documentation/generated-responses/notFound.json'
+                $ref: 'https://gist.githubusercontent.com/nikolaj291/1f184d57167622f0431605af0beb2818/raw/accommodation-filing-response.json'
   '/platforms/{platformId}/{assetType}-filing/{filingReference}/versions':
     get:
       tags:
@@ -175,7 +185,7 @@ paths:
         - $ref: '#/components/parameters/platformId'
         - $ref: '#/components/parameters/assetType'
         - $ref: '#/components/parameters/filingReference'
-      summary: Get all versions of filing
+      summary: Get all filing versions
       description: Shows current version as well as all previous versions of a filing.
       operationId: listFilingsWithReference
       responses:
@@ -184,7 +194,23 @@ paths:
           content:
             schema:
               example: 
-                $ref: "https://raw.githubusercontent.com/skat/deling-api-documentation/master/documentation/generated-responses/accommodation-filing.json"
+                $ref: "https://gist.githubusercontent.com/nikolaj291/1f184d57167622f0431605af0beb2818/raw/accommodation-filing-response.json"
+  '/platforms/{platformId}/':
+    get:
+      tags:
+        - Filings
+      parameters:
+        - $ref: '#/components/parameters/platformId'
+      summary: Get all filings 
+      description: List all filings for the platform
+      operationId: listFilings
+      responses:
+        '200':
+          description: Returns a list of filings reported by the platform.
+          content:
+            schema:
+              example: 
+                $ref: "https://gist.githubusercontent.com/nikolaj291/1f184d57167622f0431605af0beb2818/raw/accommodation-filing-response.json"
   '/platforms/{platformId}/{assetType}-filing':
     get:
       tags:
@@ -192,7 +218,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/platformId'
         - $ref: '#/components/parameters/assetType'
-      summary: Get all filings of type (NOTE - Koden understøtter ikke denne funktionalitet)
+      summary: Get all filings of type
       description: List all filings from a platform of a specific assetType
       operationId: listFilings
       responses:
@@ -201,7 +227,7 @@ paths:
           content:
             schema:
               example: 
-                $ref: "https://raw.githubusercontent.com/skat/deling-api-documentation/master/documentation/generated-responses/accommodation-filing.json"
+                $ref: "https://gist.githubusercontent.com/nikolaj291/1f184d57167622f0431605af0beb2818/raw/accommodation-filing-response.json"
 components:
   parameters:
     platformId:
