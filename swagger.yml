@@ -43,14 +43,14 @@ info:
 
     Each must be a unique [UUIDv4](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random)) for every request. 
 
-    #Testdata and testenvironments
-    ##Tokens
-    The tax payers are linked to your platform through a unique ID-token. This token will be generated the first time they allow your platform to report on their behalf. 
+    # Test data for FKT
 
-    Until we are in production however, you can use any of the ones below for testing purposes.
-
+    This section provides consumers of the API with the necessary information to make valid filings for the FKT environment.
+    
+    **Tokens:** The tax payers are linked to your platform through a unique ID-token. This token will be generated the first time they allow your platform to report on their behalf.
+    
     # Filing, Correction and invalidation
-    For examples of a filing see the request bodies further below
+    *For examples of a filing see the request/reponse samples further below*
 
     To allow a sharing economy platform to report taxable income of their users to us, a platform can:
       - Post an initial filing.
@@ -108,7 +108,7 @@ paths:
       description: |
         Create a new filing or update/invalidate an existing one.
         When initially creating the filing, the sequence number in the payload needs to be 1. Whenever there is an update to a filing, the sequence number
-        must increment in order to show the latest version.
+        must increment in order to indicate the new latest version.
       operationId: addFiling
       requestBody:
         description: |
@@ -119,11 +119,12 @@ paths:
           [Vehicle-filing](https://gist.githubusercontent.com/svc-ufst-deleokonomi-gist-deployment/d3979d5386e42c091ed57133564934e2/raw/vehicle-filing-schema.json)
 
           [Boat-filing](https://gist.githubusercontent.com/svc-ufst-deleokonomi-gist-deployment/d3979d5386e42c091ed57133564934e2/raw/boat-filing-schema.json)
-
+           
         content:
           application/json:
-            example:
-              $ref: "https://gist.githubusercontent.com/svc-ufst-deleokonomi-gist-deployment/d3979d5386e42c091ed57133564934e2/raw/vehicle-filing-request.json"
+            schema:
+              example:
+                $ref: "https://gist.githubusercontent.com/svc-ufst-deleokonomi-gist-deployment/d3979d5386e42c091ed57133564934e2/raw/vehicle-filing-request.json"
       responses:
         "201":
           description: A correct filing was submitted
