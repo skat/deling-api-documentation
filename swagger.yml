@@ -7,59 +7,66 @@ info:
   description: |
 
     # Introduction
-    This is the API for receiving filings concerning citizens taxable transactions, from sharing economy platforms, for project DEL (Deleøkonomi).
-    This REST API is built, in order for platforms to send in relevant income data to Skatteforvaltningen on their users and their rentals.
+    On December 20th 2018 new legislation regarding sharing economy was passed. 
+    To ensure compliance with the legislation project DEL started with the goal of creating a reporting solution, allowing sharing economy platforms to report relevant income to Skatteforvaltningen regarding the platforms users and their rentals. Users are incentivized to use platforms that report via the reporting solution by giving them a higher deductible. In the area of short term housing rentals users are further incentivized by elevating the maximum rented period from 30 days to 70 days.
+    This is the API for receiving filings concerning citizens taxable transactions, from sharing economy platforms, 
+    for project DEL (Deleøkonomi).
 
-    The API is organized around [REST](https://en.wikipedia.org/wiki/Representational_state_transfer), using JSON as the payload format. Our API has resource-oriented URLs and uses HTTP response codes to indicate API errors. JSON is returned by all API responses, including errors.
+    The project is built using REST architecture and it exposes the following functionality to sharing economy platforms:
+    - Userflow to acquire a valid identity of a given user.
+    - API support for reporting and updating user income to the danish tax authorities
+    - API support for viewing what has been reported to the danish tax authorities
 
-    The API allows manipulation of three types of resources:
-      - vehicle filings
-      - boat filings
-      - accommodation filings
-      
-    A filing resource is uniquely identified by a platformId and a filingReference. In case multiple versions of the resource have been created these can be distinguished by a sequence number which is part of the payload. The sequence number starts at zero and increments by one for every new version of the filing.
+    The API uses JSON as the payload format. The API is built with resource-oriented URLs and uses HTTP response codes to indicate API errors. JSON is returned by all API responses, including errors.
 
-    # URL
-    The path structure for creating a filing resource has the following structure:
+    At the time of writing the API handles three distinct resource types:
+    - vehicle filings
+    - boat filings
+    - accommodation filings
 
-    ```POST <host>/platforms/<platformId>/<assetType>-filings/<filingReference>```
+    A filing resource is uniquely identified by a platformId and a filingReference. 
+    In case multiple versions of the resource have been created these can be distinguished by a sequence number which is part of the payload. 
+    The sequence number starts at one and increments by one for every new version of the filing.
 
-    The three placeholders have the following semantics:
-    - platformId - the ID assigned to the platform during the onboarding-process.
-    - assetType - the asset type being filed for. Currently vehicle, boat or accommodation.
-    - filingReference - the platform's internal reference for the filing. 
+    # Accessing the API
+    The system authenticates 3rd party platforms through two-way ssl.
 
-    Here is an example for the initial filing for a car:   
-
-    ```POST <host>/platforms/85232389-c876-40a4-9b67-f95eec44825d/vehicle-filings/1234567```
-
-    To get the filing resource use the following url:
-
-    ```GET <host>/platforms/85232389-c876-40a4-9b67-f95eec44825d/vehicle-filings/1234567```
-
-    # PersonIdToken
-    The tax payers are linked to your platform through a unique ID-token where one of the fields in the post payload contains this information.
-    This token will be generated the first time they allow your platform to report on their behalf, but until we are in production however,
-    you can use any of the ones below for testing purposes.
-
-    | Tokens    |
-    |-----------|
-    | 123456789 |
+    To enable two-way ssl the following steps must be taken:
+      -The client (platform) must establish trust to Skat's certificate authority. This is done by installing these certificates <Insert-certificates-or-maybe-link-to-them-here>
+      -The reporting solution must establish trust to the client. This is done by sending the public key to us so we can install it.
+    
+    **For non-production environments**  (Currently: FKT) we supply a certificate that already has trust established upon request.
 
     # Requests
     Every request to the api must have the following two headers:
     - X-Transaktions-ID
     - X-Request-ID
 
-    Each must be a unique UUIDv4 for every request. 
+    Each must be a unique [UUIDv4](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random)) for every request. 
 
-    # Corrections
-    There are two types of filings:
-    - Regular filings. These filing contain actual business data about revenue inside a filingData-element in the JSON payload.
-    - Invalidations - these void whatever was filed previously for the given filing resource. The invalidation has no filingData-element.
-    Whenever a new version of a resource is created, the old one is disregarded. 
+    #Testdata and testenvironments
+    ##Tokens
+    The tax payers are linked to your platform through a unique ID-token. This token will be generated the first time they allow your platform to report on their behalf. 
 
-    The following example flow illustrates how a resource is created, corrected and invalidated.
+    Until we are in production however, you can use any of the ones below for testing purposes.
+
+    # Filing, Correction and invalidation
+    For examples of a filing see the request bodies further below
+
+    To allow a sharing economy platform to report taxable income of their users to us, a platform can:
+      - Post an initial filing.
+      - Post a correction to a filing
+      - Post an invalidation of a filing
+    
+    An initial filing is the filing with a given filingReference that has the sequenceNumber 1.
+
+    A correction is any filing on an already created resources filingReference with a subsequent sequenceNumber.
+
+    An invalidation is, much like a correction, a filing on an already created resources filingReference with a subsequent sequenceNumber, but without the filingData element.
+
+    When a new version of a resource is created, by either making a correction or invalidating the filing, all older versions are disregarded when calculating taxes.
+
+    The following example flow illustrates how a resource is created, corrected and invalidated. 
 
     | sequenceNumber | has filingData-element | Http status | current sequenceNumber    | Description |   
     |-|-----|---|---------------------------|-------------------------------------------------------------|
@@ -71,6 +78,8 @@ info:
     |3|	no	|201|3                          |	An invalidation, old resource is disregarded                |
     |4|	yes |201|4                          |	New version of filing is filed, old resource is disregarded |
     |5|	yes |201|5                          |	New version of filing is filed, old resource is disregarded |
+
+    The user who this filing regards to is then taxed based on the input of the filing with sequenceNumber 5
 
   version: 1.0.0
   title: Filing API
