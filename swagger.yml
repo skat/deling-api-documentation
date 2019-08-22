@@ -1,8 +1,8 @@
 openapi: 3.0.2
 servers:
-  - url: 'http://del.skat.dk/'
+  - url: "http://del.skat.dk/"
 x-servers:
-  - url: 'http://del.skat.dk/'
+  - url: "http://del.skat.dk/"
 info:
   description: |
 
@@ -23,7 +23,7 @@ info:
     The path structure for creating a filing resource has the following structure:
 
     ```POST <host>/platforms/<platformId>/<assetType>-filings/<filingReference>```
-    
+
     The three placeholders have the following semantics:
     - platformId - the ID assigned to the platform during the onboarding-process.
     - assetType - the asset type being filed for. Currently vehicle, boat or accommodation.
@@ -61,46 +61,46 @@ info:
 
     The following example flow illustrates how a resource is created, corrected and invalidated.
 
-    | sequenceNumber | has filingData-element | Http status | current sequenceNumber    | Description                                                 |
-    |----------------|------------------------|-------------|---------------------------|-------------------------------------------------------------|
-    | 0              | yes                    | 201         | 0                         | Filing is filed                                             |
-    | 1              | yes                    | 400         | no current sequenceNumber | The sequence number has to be 0 in the initial filing       | 
-    | 1              | no                     | 201         | 1                         | This is an invalidation, old resource is disregarded        | 
-    | 2              | no                     | 201         | 2                         | An invalidation, old resource is disregarded                | 
-    | 3              | yes                    | 400         | 1                         | Wrong sequence number, expected 2                           | 
-    | 3              | yes                    | 201         | 3                         | New version of filing is filed, old resource is disregarded | 
-    | 4              | yes                    | 201         | 4                         | New version of filing is filed, old resource is disregarded | 
-
+    | sequenceNumber | has filingData-element | Http status | current sequenceNumber    | Description |   
+    |-|-----|---|---------------------------|-------------------------------------------------------------|
+    |1|	no	|400|no current sequence number |	The first filing cannot be an invalidation                  |
+    |2|	yes |400|no current sequence number |	The sequence number has to be 1 in the initial filing       |
+    |1|	yes |201|1                          |	Filing is filed                                             |
+    |2|	no	|201|2                          |	This is an invalidation, old resource is disregarded        |
+    |4|	yes |400|2                          |	Wrong sequence number, expected 2                           |
+    |3|	no	|201|3                          |	An invalidation, old resource is disregarded                |
+    |4|	yes |201|4                          |	New version of filing is filed, old resource is disregarded |
+    |5|	yes |201|5                          |	New version of filing is filed, old resource is disregarded |
 
   version: 1.0.0
   title: Filing API
-  termsOfService: 'http://swagger.io/terms/'
+  termsOfService: "http://swagger.io/terms/"
   contact:
     email: ufst-deleokonomi@ufst.dk
   x-logo:
-    url: 'https://raw.githubusercontent.com/skat/deling-api-documentation/master/skatteministeret_logo.png'
+    url: "https://raw.githubusercontent.com/skat/deling-api-documentation/master/skatteministeret_logo.png"
     altText: Skatteministeriet Logo
-    href: ''
+    href: ""
   license:
     name: Apache 2.0
-    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
 tags:
   - name: Filings
     description: Receiving filings from 3rd party platforms and displaying reported filings back to the platforms  regarding a danish taxpayers sharing economy transactions through a sharing economy platform.
 paths:
-  '/platforms/{platformId}/{assetType}-filing/{filingReference}':
+  "/platforms/{platformId}/{assetType}-filing/{filingReference}":
     post:
       tags:
         - Filings
       parameters:
-        - $ref: '#/components/parameters/platformId'
-        - $ref: '#/components/parameters/assetType'
-        - $ref: '#/components/parameters/filingReference'
+        - $ref: "#/components/parameters/platformId"
+        - $ref: "#/components/parameters/assetType"
+        - $ref: "#/components/parameters/filingReference"
       summary: Create or update filing
       description: |
         Create a new filing or update an existing one.
         When initially creating the filing, the sequence number in the payload needs to be 0. Whenever there is an update to a filing, the sequence number
-        must increment in order to show the latest version. 
+        must increment in order to show the latest version.
       operationId: addFiling
       requestBody:
         description: |
@@ -109,124 +109,124 @@ paths:
           [Accommodation-filing](https://gist.githubusercontent.com/svc-ufst-deleokonomi-gist-deployment/d3979d5386e42c091ed57133564934e2/raw/accommodation-filing-schema.json)
 
           [Vehicle-filing](https://gist.githubusercontent.com/svc-ufst-deleokonomi-gist-deployment/d3979d5386e42c091ed57133564934e2/raw/vehicle-filing-schema.json)
-          
+
           [Boat-filing](https://gist.githubusercontent.com/svc-ufst-deleokonomi-gist-deployment/d3979d5386e42c091ed57133564934e2/raw/boat-filing-schema.json)
 
         content:
           application/json:
-            example: 
+            example:
               $ref: "https://gist.githubusercontent.com/svc-ufst-deleokonomi-gist-deployment/d3979d5386e42c091ed57133564934e2/raw/vehicle-filing-request.json"
       responses:
-        '201':
+        "201":
           description: A correct filing was submitted
           content:
             application/json:
-              example: 
+              example:
                 $ref: "https://gist.githubusercontent.com/svc-ufst-deleokonomi-gist-deployment/d3979d5386e42c091ed57133564934e2/raw/vehicle-filing-response.json"
-        '400':
+        "400":
           description: Wrong sequenceNumber or wrong platformId was supplied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FilingError'
-        '503':
+                $ref: "#/components/schemas/FilingError"
+        "503":
           description: Unknown token was supplied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FilingError'
+                $ref: "#/components/schemas/FilingError"
     get:
       tags:
         - Filings
       parameters:
-        - $ref: '#/components/parameters/platformId'
-        - $ref: '#/components/parameters/assetType'
-        - $ref: '#/components/parameters/filingReference'
+        - $ref: "#/components/parameters/platformId"
+        - $ref: "#/components/parameters/assetType"
+        - $ref: "#/components/parameters/filingReference"
       summary: Get filing
       description: Get the current version of a filing for an asset type.
       operationId: showFilingWithReference
       responses:
-        '200':
+        "200":
           description: Returns a list of filings reported by the platform.
           content:
             application/json:
-              example: 
+              example:
                 $ref: "https://gist.githubusercontent.com/svc-ufst-deleokonomi-gist-deployment/d3979d5386e42c091ed57133564934e2/raw/vehicle-filing-response.json"
-  '/platforms/{platformId}/{assetType}-filing/{filingReference}/{sequenceNumber}':
-    get:
+  ? "/platforms/{platformId}/{assetType}-filing/{filingReference}/{sequenceNumber}"
+  : get:
       tags:
         - Filings
       parameters:
-        - $ref: '#/components/parameters/platformId'
-        - $ref: '#/components/parameters/assetType'
-        - $ref: '#/components/parameters/filingReference'
-        - $ref: '#/components/parameters/sequenceNumber'
+        - $ref: "#/components/parameters/platformId"
+        - $ref: "#/components/parameters/assetType"
+        - $ref: "#/components/parameters/filingReference"
+        - $ref: "#/components/parameters/sequenceNumber"
       summary: Get filing version
       description: Get a specific version of a filing where the sequence number denotes the desired version.
       operationId: showFilingWithSequence
       responses:
-        '200':
+        "200":
           description: Returns the specified version of a filing.
           content:
             application/json:
-              example: 
-                $ref: 'https://gist.githubusercontent.com/svc-ufst-deleokonomi-gist-deployment/d3979d5386e42c091ed57133564934e2/raw/vehicle-filing-response.json'
-        '404':
+              example:
+                $ref: "https://gist.githubusercontent.com/svc-ufst-deleokonomi-gist-deployment/d3979d5386e42c091ed57133564934e2/raw/vehicle-filing-response.json"
+        "404":
           description: The given filingReference or sequenceNumber does not exist
           content:
             application/json:
-              example: 
-                $ref: 'https://gist.githubusercontent.com/svc-ufst-deleokonomi-gist-deployment/d3979d5386e42c091ed57133564934e2/raw/not-found-response.json'
-  '/platforms/{platformId}/{assetType}-filing/{filingReference}/versions':
+              example:
+                $ref: "https://gist.githubusercontent.com/svc-ufst-deleokonomi-gist-deployment/d3979d5386e42c091ed57133564934e2/raw/not-found-response.json"
+  "/platforms/{platformId}/{assetType}-filing/{filingReference}/versions":
     get:
       tags:
         - Filings
       parameters:
-        - $ref: '#/components/parameters/platformId'
-        - $ref: '#/components/parameters/assetType'
-        - $ref: '#/components/parameters/filingReference'
+        - $ref: "#/components/parameters/platformId"
+        - $ref: "#/components/parameters/assetType"
+        - $ref: "#/components/parameters/filingReference"
       summary: Get all filing versions
       description: Shows current version as well as all previous versions of a filing.
       operationId: listFilingsWithReference
       responses:
-        '200':
+        "200":
           description: Returns a list of filings reported by the platform.
           content:
             application/json:
-              example: 
+              example:
                 $ref: "https://gist.githubusercontent.com/svc-ufst-deleokonomi-gist-deployment/d3979d5386e42c091ed57133564934e2/raw/vehicle-filing-versions-response.json"
-  '/platforms/{platformId}/':
+  "/platforms/{platformId}/":
     get:
       tags:
         - Filings
       parameters:
-        - $ref: '#/components/parameters/platformId'
-      summary: Get all filings 
+        - $ref: "#/components/parameters/platformId"
+      summary: Get all filings
       description: List all filings for the platform
       operationId: listFilings
       responses:
-        '200':
+        "200":
           description: Returns a list of filings reported by the platform.
           content:
             application/json:
-              example: 
+              example:
                 $ref: "https://gist.githubusercontent.com/svc-ufst-deleokonomi-gist-deployment/d3979d5386e42c091ed57133564934e2/raw/all-filings-response.json"
-  '/platforms/{platformId}/{assetType}-filing':
+  "/platforms/{platformId}/{assetType}-filing":
     get:
       tags:
         - Filings
       parameters:
-        - $ref: '#/components/parameters/platformId'
-        - $ref: '#/components/parameters/assetType'
+        - $ref: "#/components/parameters/platformId"
+        - $ref: "#/components/parameters/assetType"
       summary: Get all filings of type
       description: List all filings from a platform of a specific assetType
       operationId: listFilings
       responses:
-        '200':
+        "200":
           description: Returns a list of filings reported by the platform.
           content:
             application/json:
-              example: 
+              example:
                 $ref: "https://gist.githubusercontent.com/nikolaj291/1f184d57167622f0431605af0beb2818/raw/all-vehicle-type-filings-response.json"
 components:
   parameters:
@@ -248,7 +248,7 @@ components:
           - vehicle
           - boat
       required: true
-      description: 'The assets type, one of the three following values - accommodation, vehicle, boat'
+      description: "The assets type, one of the three following values - accommodation, vehicle, boat"
     filingReference:
       in: path
       name: filingReference
@@ -264,7 +264,7 @@ components:
         type: integer
       required: true
       description: The sequence/verson number of a filing starting at zero while incrementing with each change
-      example: '0'
+      example: "0"
   schemas:
     SuccessfulFiling:
       required:
@@ -308,7 +308,7 @@ components:
               properties:
                 pointer:
                   type: string
-                  example: '#/data/attributes/sequenceNumber'
+                  example: "#/data/attributes/sequenceNumber"
             detail:
               type: string
-              example: 'The value for sequenceNumber was 1 in the payload, but 2 was expected'
+              example: "The value for sequenceNumber was 1 in the payload, but 2 was expected"
