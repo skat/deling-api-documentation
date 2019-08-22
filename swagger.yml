@@ -94,7 +94,7 @@ info:
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
 tags:
   - name: Filings
-    description: Receiving filings from 3rd party platforms and displaying reported filings back to the platforms  regarding a danish taxpayers sharing economy transactions through a sharing economy platform.
+    description: This section references the possible operations in regards to reporting a users income.
 paths:
   "/platforms/{platformId}/{assetType}-filing/{filingReference}":
     post:
@@ -104,10 +104,10 @@ paths:
         - $ref: "#/components/parameters/platformId"
         - $ref: "#/components/parameters/assetType"
         - $ref: "#/components/parameters/filingReference"
-      summary: Create or update filing
+      summary: Create, update or invalidate filing
       description: |
-        Create a new filing or update an existing one.
-        When initially creating the filing, the sequence number in the payload needs to be 0. Whenever there is an update to a filing, the sequence number
+        Create a new filing or update/invalidate an existing one.
+        When initially creating the filing, the sequence number in the payload needs to be 1. Whenever there is an update to a filing, the sequence number
         must increment in order to show the latest version.
       operationId: addFiling
       requestBody:
