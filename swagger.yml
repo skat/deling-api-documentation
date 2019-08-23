@@ -1,10 +1,14 @@
 openapi: 3.0.2
 servers:
-  - url: "http://del.skat.dk/"
-x-servers:
-  - url: "http://del.skat.dk/"
+  - url: "http://api.fkt.del.nonprd.skat.dk/"
 info:
   description: |
+
+    ## Disclaimer
+    *This API is still a work in progress. We apologies for any bugs, you might encounter.
+    If you have any comments or discover issues, feel free to create a GitHub Issue [here](https://github.com/skat/deling-api-documentation).
+    Alternatively, you are welcome to write to us at [ufst-deleokonomi@ufst.dk](mailto:ufst-deleokonomi@ufst.dk).*
+
     # Introduction
     On December 20th 2018 new legislation regarding sharing economy was passed. 
     To ensure compliance with the legislation project DEL started with the goal of creating a reporting solution, allowing sharing economy platforms to report relevant income to Skatteforvaltningen regarding the platforms users and their rentals. Users are incentivized to use platforms that report via the reporting solution by giving them a higher deduction. In the area of short term housing rentals users are further incentivized by elevating the maximum rented period from 30 days to 70 days.
@@ -80,7 +84,7 @@ info:
 
     The user who this filing regards to is then taxed based on the input of the filing with sequenceNumber 5
 
-  version: 1.0.0
+  version: 0.0.9
   title: Filing API
   termsOfService: "http://swagger.io/terms/"
   contact:
@@ -96,8 +100,6 @@ tags:
   - name: Filings
     description: |
       This section references the possible operations in regards to reporting a users income.
-      
-      *If you have any comments or discover issues, feel free to create a GitHub Issue [here](https://github.com/skat/deling-api-documentation).*
 paths:
   "/platforms/{platformId}/{assetType}-filing/{filingReference}":
     post:
