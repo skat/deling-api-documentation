@@ -94,7 +94,10 @@ info:
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
 tags:
   - name: Filings
-    description: This section references the possible operations in regards to reporting a users income.
+    description: |
+      This section references the possible operations in regards to reporting a users income.
+      
+      *If you have any comments or discover issues, feel free to create a GitHub Issue [here](https://github.com/skat/deling-api-documentation).*
 paths:
   "/platforms/{platformId}/{assetType}-filing/{filingReference}":
     post:
