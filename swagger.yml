@@ -11,7 +11,7 @@ info:
 
     # Introduction
     On December 20th 2018 new legislation regarding sharing economy was passed. 
-    To ensure compliance with the legislation project DEL started with the goal of creating a reporting solution, allowing sharing economy platforms to report relevant income to Skatteforvaltningen regarding the platforms users and their rentals. Users are incentivized to use platforms that report via the reporting solution by giving them a higher deduction. In the area of short term housing rentals users are further incentivized by elevating the maximum rented period from 30 days to 70 days.
+    To ensure compliance with the legislation project DEL started with the goal of creating a reporting solution, allowing sharing economy platforms to report relevant income to the danish tax authorities regarding the platforms users and their rentals. Users are incentivized to use platforms that report via the reporting solution by giving them a higher deduction. In the area of short term housing rentals users are further incentivized by elevating the maximum rented period from 30 days to 70 days.
     This is the API for receiving filings concerning citizens taxable transactions, from sharing economy platforms, 
     for project DEL (Deleøkonomi).
 
