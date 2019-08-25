@@ -241,7 +241,7 @@ paths:
           content:
             application/json:
               example:
-                $ref: "https://gist.githubusercontent.com/nikolaj291/1f184d57167622f0431605af0beb2818/raw/all-vehicle-type-filings-response.json"
+                $ref: "https://gist.githubusercontent.com/svc-ufst-deleokonomi-gist-deployment/d3979d5386e42c091ed57133564934e2/raw/all-vehicle-type-filings-response.json"
 components:
   parameters:
     platformId:
