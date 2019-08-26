@@ -137,18 +137,6 @@ paths:
             application/json:
               example:
                 $ref: "https://gist.githubusercontent.com/svc-ufst-deleokonomi-gist-deployment/d3979d5386e42c091ed57133564934e2/raw/vehicle-filing-response.json"
-        "400":
-          description: Wrong sequenceNumber or wrong platformId was supplied
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/FilingError"
-        "503":
-          description: Unknown token was supplied
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/FilingError"
     get:
       tags:
         - Filings
