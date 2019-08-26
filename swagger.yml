@@ -38,10 +38,10 @@ info:
       -The client (platform) must establish trust to Skat's certificate authority. This is done by installing these certificates <Insert-certificates-or-maybe-link-to-them-here>
       -The reporting solution must establish trust to the client. This is done by sending the public key to us so we can install it.
     
-    **For non-production environments**  (Currently: FKT) we supply a certificate that already has trust established upon request. This certificate can be downloaded here:
+    **For non-production environments**  (Currently: FKT) we supply a certificate that already has trust established upon request for testing purposes. This certificate can be downloaded here:
     
     | [Download Certificate](https://github.com/skat/deling-api-documentation/raw/master/VOCES_gyldig.p12) | Password: 'Test1234' |
-    |-------------|-------------|
+    |------------------------------------------------------------------------------------------------------|----------------------|
 
     # Requests
     Every request to the api must have the following two headers:
