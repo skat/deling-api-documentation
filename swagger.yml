@@ -38,7 +38,10 @@ info:
       -The client (platform) must establish trust to Skat's certificate authority. This is done by installing these certificates <Insert-certificates-or-maybe-link-to-them-here>
       -The reporting solution must establish trust to the client. This is done by sending the public key to us so we can install it.
     
-    **For non-production environments**  (Currently: FKT) we supply a certificate that already has trust established upon request.
+    **For non-production environments**  (Currently: FKT) we supply a certificate that already has trust established upon request. This certificate can be downloaded here:
+    
+    | [Download Certificate](https://github.com/skat/deling-api-documentation/raw/master/VOCES_gyldig.p12) | Password: 'Test1234' |
+    |-------------|-------------|
 
     # Requests
     Every request to the api must have the following two headers:
@@ -51,8 +54,13 @@ info:
 
     This section provides consumers of the API with the necessary information to make valid filings for the FKT environment.
     
-    **Tokens:** The tax payers are linked to your platform through a unique ID-token. This token will be generated the first time they allow your platform to report on their behalf.
+    ### Tokens
+    The tax payers are linked to your platform through a unique ID-token. This token will be generated the first time they allow your platform to report on their behalf.
     
+    
+    | 12345-123-12345 |
+    |-----------------|
+
     # Filing, Correction and invalidation
     *For examples of a filing see the request/reponse samples further below*
 
